@@ -1,20 +1,17 @@
 import React from 'react'
 import Link from 'next/link'
-import { getSession } from '@/app/actions'
+import Image from 'next/image';
+import logo from '@/utils/images/logo.png'
 
 const Navbar = async () => {
-    const session = await getSession()
-
   return (
-    <nav className='bg-[#212227] text-white w-96 rounded-[20px] mt-4 mx-auto h-[50px] flex items-center justify-center'>
-        <ul className='flex justify-center items-center gap-10 cursor-pointer'>
-           <Link href='/'><li className='w-16 hover:bg-[#32333b] text-center rounded-[20px]'>Home</li></Link>
-            <Link href='/login'><li className='bg-[#33C136] text-white rounded-[20px] w-16 text-center hover:bg-[#29a02b]'>Login</li></Link>
-          
-           {session.isLoggedIn &&
-           <Link href='/'><li className='bg-[#33C136] text-white rounded-[20px] w-16 text-center hover:bg-[#29a02b]'>Logout</li></Link>
-        } 
-        </ul>
+    <nav className=' w-full mx-auto h-[64px] shadow-lg flex justify-between items-center px-10'>
+
+          <Link href='/'><div className='flex justify-center items-center gap-2'><Image src={logo} alt='logo' width={50} height={50}></Image> <span className='text-[#610000] cookie-regular font-bold text-xl'>Cook Weekly</span></div></Link>
+          <div className='flex justify-center items-center gap-10'>
+            <Link className='w-14 text-center py-1 relative after:bg-[#D34C26] after:absolute after:h-1 after:w-0 after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300 cursor-pointer' href='/login'>Login</Link>
+            <Link className='bg-[#D34C26] text-white rounded-lg w-20 text-center py-1' href='/register'>Register</Link>
+          </div>
     </nav>
   )
 }
