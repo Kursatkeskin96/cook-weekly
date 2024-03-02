@@ -7,8 +7,7 @@ import { FaFacebookSquare, FaInstagram } from "react-icons/fa";
 import { useState, FormEvent } from "react";
 import { useRouter } from 'next/navigation'
 
-const RegisterForm = () => {
-  const [username, setUsername] = useState<string>("");
+const LoginForm = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [message, setMessage] = useState<string>("");
@@ -28,7 +27,6 @@ const RegisterForm = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        username,
         email,
         password,
       }),
@@ -42,7 +40,6 @@ const RegisterForm = () => {
     
     if (response.ok) {
       // Reset form or redirect user as needed
-      setUsername("");
       setEmail("");
       setPassword("");
       router.push('/')
@@ -65,9 +62,9 @@ const RegisterForm = () => {
             {" "}
             <Image src={logo} alt="logo" width={80} height={80} />
           </div>
-          <h3 className="text-center font-bold text-xl mt-2">Welcome Chef</h3>
+          <h3 className="text-center font-bold text-xl mt-2">Welcome Back</h3>
           <p className="text-[#646464] text-center">
-            You can register with your social accounts
+          Please enter your details to login
           </p>
           
           <div className="flex justify-center items-center gap-5 mt-5">
@@ -88,7 +85,7 @@ const RegisterForm = () => {
             <hr className="w-[35%] h-[1px] mx-auto my-4 bg-[#610000] border-0 rounded"></hr>
           </div>
 
-          <div className="flex flex-col px-5">
+          <div className="flex flex-col px-5 my-4">
             <label htmlFor="email" className="pl-3">E-mail</label>
             <input
               id="email"
@@ -100,20 +97,7 @@ const RegisterForm = () => {
             />
           </div>
 
-          <div className="flex flex-col px-5 my-3">
-            <label htmlFor="username">Username</label>
-            <input
-              id="username"
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="caret-[#818181] border border-[#818181]text-sm rounded-[16px] h-8 pl-3 focus:border-[#610000] focus:ring-0 focus:outline-none"
-              required
-              placeholder="Type your username.."
-            />
-          </div>
-
-          <div className="flex flex-col px-5">
+          <div className="flex flex-col px-5 pb-4">
             <label htmlFor="password">Password</label>
             <input
               id="password"
@@ -130,7 +114,7 @@ const RegisterForm = () => {
             type="submit"
             disabled={isLoading} // Disable button when loading
           >
-            {isLoading ? <Spinner /> : 'Register'} {/* Show spinner when loading */}
+            {isLoading ? <Spinner /> : 'Login'} {/* Show spinner when loading */}
           </button></div>
           {message && <p>{message}</p>}
         </div>
@@ -139,4 +123,4 @@ const RegisterForm = () => {
   );
 };
 
-export default RegisterForm;
+export default LoginForm;

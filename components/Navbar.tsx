@@ -5,7 +5,7 @@ import logo from '@/utils/images/logo.png'
 
 const Navbar = async () => {
   return (
-    <nav className=' w-full mx-auto h-[64px] shadow-lg flex justify-between items-center px-10'>
+    <nav className=' w-full mx-auto h-[64px] border-b-[1px] border-gray-100 flex justify-between items-center px-10'>
 
           <Link href='/'><div className='flex justify-center items-center gap-2'><Image src={logo} alt='logo' width={50} height={50}></Image> <span className='text-[#610000] cookie-regular font-bold text-xl'>Cook Weekly</span></div></Link>
           <div className='flex justify-center items-center gap-10'>
