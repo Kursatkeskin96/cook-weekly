@@ -3,11 +3,13 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "./db";
 import type { Adapter } from "next-auth/adapters";
+import { compare } from "bcrypt";
 
 export const authOptions: NextAuthOptions = {
     adapter: PrismaAdapter(db) as Adapter,
     session: {
-        strategy: "jwt"
+        strategy: "jwt",
+        maxAge: 7 * 24 * 60 * 60, 
     },
     pages: {
         signIn: '/login',
@@ -16,23 +18,51 @@ providers: [
   CredentialsProvider({
     name: "Credentials",
     credentials: {
-      username: { label: "Username", type: "text", placeholder: "jsmith" },
+      email: { label: "Email", type: "text", placeholder: "johndoe@gmail.com" },
       password: { label: "Password", type: "password" }
     },
     async authorize(credentials, req) {
-      // Add logic here to look up the user from the credentials supplied
-      const user = { id: "1", name: "J Smith", email: "jsmith@example.com" }
-
-      if (user) {
-        // Any object returned will be saved in `user` property of the JWT
-        return user
-      } else {
-        // If you return null then an error will be displayed advising the user to check their details.
-        return null
-
-        // You can also Reject this callback with an Error thus the user will be sent to the error page with the error message as a query parameter
+      if(!credentials?.email || !credentials?.password ){
+        return null;
       }
+      const existingUser = await db.user.findUnique({
+        where: {email: credentials?.email}
+      });
+    if(!existingUser){
+      return null;
+    }
+    const passwordMatch = await compare(credentials.password, existingUser.password)
+
+    if(!passwordMatch) {
+      return null
+    }
+    return {
+      id:  `${existingUser.id}`,
+      username: existingUser.username,
+      email: existingUser.email
+    }
     }
   })
-]
+],
+callbacks: {
+  async jwt ({ token, user}){
+    if(user){
+      return {
+        ...token,
+        username: user.username
+      }
+    }
+    return token
+  },
+  async session({ session, user, token}){
+    return {
+      ...session,
+      user:{
+        ...session.user,
+        username: token.username
+      }
+    }
+    return session
+  }
+}
 }
