@@ -8,6 +8,7 @@ import logo from "@/utils/images/logo.png";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation"
 import { useState } from "react";
+import Link from "next/link";
 
 const FormSchema = z.object({
   email: z.string().min(1, 'Email is required').email('Invalid email'),
@@ -50,10 +51,11 @@ const LoginForm = () => {
         className="bg-white h-fit lg:my-10 md:my-10 pb-5 w-[90%] md:w-[70%] lg:w-[400px] rounded-[16px]"
       >
         <div className="flex-col">
+          <Link href='/'>
           <div className="flex justify-center items-center mt-5">
-            {" "}
             <Image src={logo} alt="logo" width={80} height={80} />
           </div>
+          </Link>
           <h3 className="text-center font-bold text-xl mt-2">Welcome Back</h3>
           <p className="text-[#646464] text-center">
           Please enter your details to login

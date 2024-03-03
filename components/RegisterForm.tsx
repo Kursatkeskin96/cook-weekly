@@ -4,6 +4,7 @@ import Image from "next/image";
 import logo from "@/utils/images/logo.png";
 import { useState, FormEvent } from "react";
 import { useRouter } from 'next/navigation'
+import Link from "next/link";
 
 const RegisterForm = () => {
   const [username, setUsername] = useState<string>("");
@@ -56,13 +57,14 @@ const RegisterForm = () => {
     <div className="bg-gray-100 min-h-screen flex justify-center items-start md:items-center lg:pt-0 md:pt-0 lg:items-center pt-20">
       <form
         onSubmit={handleSubmit}
-        className="bg-white h-fit lg:my-10 md:my-10 pb-5 w-[90%] md:w-[70%] lg:w-[400px] rounded-[16px]"
+        className="bg-white fo9r h-fit lg:my-10 md:my-10 pb-5 w-[90%] md:w-[70%] lg:w-[400px] rounded-[16px]"
       >
         <div className="flex-col">
+          <Link href='/'>
           <div className="flex justify-center items-center mt-5">
-            {" "}
             <Image src={logo} alt="logo" width={80} height={80} />
           </div>
+          </Link>
           <h3 className="text-center font-bold text-xl mt-2">Welcome Chef</h3>
           <p className="text-[#646464] text-center">
             Please enter your details to register
