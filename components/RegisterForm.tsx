@@ -2,8 +2,6 @@
 
 import Image from "next/image";
 import logo from "@/utils/images/logo.png";
-import { FcGoogle } from "react-icons/fc";
-import { FaFacebookSquare, FaInstagram } from "react-icons/fa";
 import { useState, FormEvent } from "react";
 import { useRouter } from 'next/navigation'
 
@@ -67,26 +65,10 @@ const RegisterForm = () => {
           </div>
           <h3 className="text-center font-bold text-xl mt-2">Welcome Chef</h3>
           <p className="text-[#646464] text-center">
-            You can register with your social accounts
+            Please enter your details to register
           </p>
           
-          <div className="flex justify-center items-center gap-5 mt-5">
-            <div className="w-[90px] hover:bg-gray-200 h-[32px] border-[1px] border-[#9A9A9A] rounded-[16px] cursor-pointer flex justify-center items-center">
-              <FcGoogle className="text-2xl" />
-            </div>
-            <div className="w-[90px] hover:bg-gray-200 h-[32px] border-[1px] border-[#9A9A9A] rounded-[16px] cursor-pointer flex justify-center items-center">
-              <FaFacebookSquare className="text-2xl text-[#1877f2]" />
-            </div>
-            <div className="w-[90px] hover:bg-gray-200 h-[32px] border-[1px] border-[#9A9A9A] rounded-[16px] cursor-pointer flex justify-center items-center">
-              <FaInstagram className="text-2xl text-[#d9317b]" />
-            </div>
-          </div>
-
-          <div className="flex justify-center items-center mt-5">
-            <hr className="w-[35%] h-[1px] mx-auto my-4 bg-[#610000] border-0 rounded"></hr>
-            <p className="text-[#610000]">OR</p>
-            <hr className="w-[35%] h-[1px] mx-auto my-4 bg-[#610000] border-0 rounded"></hr>
-          </div>
+   <hr className="w-[90%] h-[1px] mx-auto my-4 bg-[#610000] border-0 rounded"></hr>
 
           <div className="flex flex-col px-5">
             <label htmlFor="email" className="pl-3">E-mail</label>

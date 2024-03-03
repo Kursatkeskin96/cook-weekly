@@ -5,8 +5,6 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import logo from "@/utils/images/logo.png";
-import { FcGoogle } from "react-icons/fc";
-import { FaFacebookSquare, FaInstagram } from "react-icons/fa";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation"
 import { useState } from "react";
@@ -60,24 +58,9 @@ const LoginForm = () => {
           <p className="text-[#646464] text-center">
           Please enter your details to login
           </p>
-          
-          <div className="flex justify-center items-center gap-5 mt-5">
-            <div className="w-[90px] hover:bg-gray-200 h-[32px] border-[1px] border-[#9A9A9A] rounded-[16px] cursor-pointer flex justify-center items-center">
-              <FcGoogle className="text-2xl" />
-            </div>
-            <div className="w-[90px] hover:bg-gray-200 h-[32px] border-[1px] border-[#9A9A9A] rounded-[16px] cursor-pointer flex justify-center items-center">
-              <FaFacebookSquare className="text-2xl text-[#1877f2]" />
-            </div>
-            <div className="w-[90px] hover:bg-gray-200 h-[32px] border-[1px] border-[#9A9A9A] rounded-[16px] cursor-pointer flex justify-center items-center">
-              <FaInstagram className="text-2xl text-[#d9317b]" />
-            </div>
-          </div>
 
-          <div className="flex justify-center items-center mt-5">
-            <hr className="w-[35%] h-[1px] mx-auto my-4 bg-[#610000] border-0 rounded"></hr>
-            <p className="text-[#610000]">OR</p>
-            <hr className="w-[35%] h-[1px] mx-auto my-4 bg-[#610000] border-0 rounded"></hr>
-          </div>
+          <hr className="w-[90%] h-[1px] mx-auto my-4 bg-[#610000] border-0 rounded"></hr>
+          
           {loginError && <p className="text-white mt-5 w-[89%] mx-auto py-1 bg-red-700 text-center">{loginError}</p>}
           <div className="flex flex-col px-5 my-4">
             <label htmlFor="email" className="pl-3">E-mail</label>
