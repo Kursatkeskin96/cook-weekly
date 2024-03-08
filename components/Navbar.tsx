@@ -31,7 +31,7 @@ const Navbar = () => {
            <Link href='/'>
            <div className='w-fit text-center py-1 relative after:bg-[#D34C26] after:absolute after:h-1 after:w-0 after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300 cursor-pointer'>Home</div>
          </Link>
-         <Link href='/'>
+         <Link href={`/my-kitchen/${session.user.username}`}>
            <div className='w-fit text-center py-1 relative after:bg-[#D34C26] after:absolute after:h-1 after:w-0 after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300 cursor-pointer'>My Kitchen</div>
          </Link>
          <Link href='/'>
