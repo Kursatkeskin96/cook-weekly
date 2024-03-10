@@ -18,7 +18,7 @@ model User {
 }
 
 model Meal {
-  id          Int          @id @default(autoincrement())
+  id          Int        @unique  @id @default(autoincrement())
   name        String
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
@@ -32,6 +32,6 @@ model Ingredient {
   name   String
   unit   String
   amount String
-  mealId Int
+  mealId Int @unique
   meal   Meal   @relation(fields: [mealId], references: [id])
 }

@@ -48,6 +48,7 @@ export async function GET() {
           id: true,
           username: true,
           email: true,
+          meals: true,
           // Include other fields you want to return, but exclude sensitive data like passwords
         }
       });

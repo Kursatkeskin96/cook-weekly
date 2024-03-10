@@ -1,16 +1,4 @@
 -- CreateTable
-CREATE TABLE "User" (
-    "id" SERIAL NOT NULL,
-    "username" TEXT NOT NULL,
-    "password" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "email" TEXT NOT NULL,
-
-    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
 CREATE TABLE "Meal" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
@@ -31,18 +19,6 @@ CREATE TABLE "Ingredient" (
 
     CONSTRAINT "Ingredient_pkey" PRIMARY KEY ("id")
 );
-
--- CreateIndex
-CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
-
--- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
-
--- Alter the Meal table to include a createdBy field
-ALTER TABLE "Meal" ADD COLUMN "createdBy" TEXT;
-
--- Create a foreign key constraint for createdBy in the Meal table
-ALTER TABLE "Meal" ADD CONSTRAINT "Meal_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "User"("username") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Meal" ADD CONSTRAINT "Meal_username_fkey" FOREIGN KEY ("username") REFERENCES "User"("username") ON DELETE RESTRICT ON UPDATE CASCADE;
