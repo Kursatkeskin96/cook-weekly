@@ -14,25 +14,24 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   email     String   @unique
-  meals    Meal[] // Relation to Meals based on username
+  meals     Meal[]
 }
 
 model Meal {
   id          Int          @id @default(autoincrement())
   name        String
-  ingredients Ingredient[] // Relation to Ingredients
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
-  username    String       // Reference to User's username
+  username    String
+  ingredients Ingredient[]
   createdBy   User         @relation(fields: [username], references: [username])
 }
 
 model Ingredient {
-  id       Int    @id @default(autoincrement())
-  name     String
-  unit     String
-  amount   String
-  mealId   Int
-  meal     Meal   @relation(fields: [mealId], references: [id])
+  id     Int    @id @default(autoincrement())
+  name   String
+  unit   String
+  amount String
+  mealId Int
+  meal   Meal   @relation(fields: [mealId], references: [id])
 }
-
