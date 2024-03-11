@@ -18,20 +18,21 @@ model User {
 }
 
 model Meal {
-  id          Int        @unique  @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   name        String
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
   username    String
   ingredients Ingredient[]
-  createdBy   User         @relation(fields: [username], references: [username])
+  createdBy   User       @relation(fields: [username], references: [username])
 }
+
 
 model Ingredient {
   id     Int    @id @default(autoincrement())
   name   String
   unit   String
   amount String
-  mealId Int @unique
+  mealId Int
   meal   Meal   @relation(fields: [mealId], references: [id])
 }

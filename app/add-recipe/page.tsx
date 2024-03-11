@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 
 const steps = [
   { id: "Step 1", name: "Recipe Name" },
@@ -8,8 +9,12 @@ const steps = [
   { id: "Step 3", name: "Complete" },
 ];
 
+
 export default function Form() {
+  const {data: session} = useSession()
   const [currentStep, setCurrentStep] = useState(0);
+  const [mealName, setMealName] = useState(''); // State for meal name
+  const [ingredients, setIngredients] = useState([{ id: Date.now(), name: '', unit: '', amount: '' }]);
 
   const next = () => {
     if (currentStep < steps.length - 1) {
@@ -23,27 +28,57 @@ export default function Form() {
     }
   };
 
-  const [ingredients, setIngredients] = useState([{ id: Date.now(), name: '', unit: 'g', amount: '' }]);
-
-   // Function to add a new ingredient input set
-   const addIngredient = () => {
-    setIngredients([...ingredients, { id: Date.now(), name: '', unit: 'g', amount: '' }]);
+  const addIngredient = () => {
+    setIngredients([
+      ...ingredients, 
+      { id: Date.now(), name: '', unit: 'g', amount: '' }
+    ]);
   };
 
   const deleteIngredient = (id) => {
     setIngredients(ingredients.filter(ingredient => ingredient.id !== id));
   };
 
-  const handleInputChange = (id, field, value) => {
-    const newIngredients = ingredients.map(ingredient => {
-      if (ingredient.id === id) {
-        return { ...ingredient, [field]: value };
-      }
-      return ingredient;
-    });
-    setIngredients(newIngredients);
+const handleInputChange = (id, field, value) => {
+  const newIngredients = ingredients.map(ingredient => {
+    if (ingredient.id === id) {
+      return { ...ingredient, [field]: value };
+    }
+    return ingredient;
+  });
+  setIngredients(newIngredients);
+};
+
+
+  const handleMealName = (e) => {
+    setMealName(e.target.value);
+  }
+
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+   // Filter out empty or incomplete ingredients
+   const filteredIngredients = ingredients.filter(ingredient => 
+    ingredient.name.trim() && ingredient.unit.trim() && ingredient.amount.trim()
+  );
+
+  const payload = {
+    mealName,
+    ingredients: filteredIngredients,
+    userName: session?.user?.username
   };
 
+    const response = await fetch('/api/recipe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (response.ok) {
+      alert('Meal created successfully!');
+    } else {
+      alert('Failed to create meal.');
+    }
+  };
 
   return (
     <section className="max-w-[80%] mx-auto mt-10">
@@ -89,7 +124,15 @@ export default function Form() {
             <p className="text-gray-400">Please enter name of your meal.</p>
           <div className="mt-10">
           <label className="text-sm" htmlFor="mealname">Meal Name</label>
-          <input type="text" id='mealname' class='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#610000] focus:border-[#610000] focus:outline-none block w-[40%] p-2.5' placeholder="Chicken Wing" required />
+          <input
+  type="text"
+  id="mealname"
+  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#610000] focus:border-[#610000] focus:outline-none block w-[40%] p-2.5"
+  placeholder="Chicken Wing"
+  required
+  onChange={handleMealName} // Use the function here
+  value={mealName} // Bind the input value to the state
+/>
           </div>
           </>
         )}
@@ -122,6 +165,7 @@ export default function Form() {
                        value={ingredient.unit}
                        onChange={(e) => handleInputChange(ingredient.id, 'unit', e.target.value)}
                      >
+                      <option value="">Choose</option>
                        <option value="g">g</option>
                        <option value="ml">ml</option>
                        <option value="tbsp">tbsp</option>
@@ -163,6 +207,10 @@ export default function Form() {
            </button>
          </>
         )}
+         {currentStep === 2 && ( 
+          <>
+            <button className="bg-[#D34C26] text-white w-28 py-1 rounded-sm" onClick={handleSubmit}>Submit</button></>
+         )}
       </form>
       {/* Navigation */}
       <div className="mt-8 pt-5 mb-5 flex justify-between items-center">
