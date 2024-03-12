@@ -4,11 +4,15 @@ import { db } from '@/lib/db';
 export async function GET(req: Request, context: any) {
   const { params } = context;
 
+  console.log(params); // Debug: Log the params to see what you're getting
+
   try {
-    if (params.id) {
-      const meal = await db.meal.findUnique({
+    let meal;
+
+    if (params.username) {
+      meal = await db.meal.findMany({
         where: {
-          id: parseInt(params.id, 10) 
+          username: params.username
         },
         select: {
           id: true,
@@ -31,13 +35,16 @@ export async function GET(req: Request, context: any) {
           },
         }
       });
-
-      if (!meal) {
-        return NextResponse.json({ meal: null, message: 'Meal could not be found' }, { status: 404 });
-      }
-      return NextResponse.json({ meal }, { status: 200 });
+      console.log(meal); // Debug: Log the result of the query by username
     }
+
+    if (!meal || meal.length === 0) {
+      return NextResponse.json({ meal: null, message: 'Meal could not be found' }, { status: 404 });
+    }
+
+    return NextResponse.json({ meal }, { status: 200 });
   } catch (error) {
+    console.error(error); // Debug: Log the error if any
     return NextResponse.json({ meal: null, message: 'Something went wrong', error: "error" }, { status: 500 });
   }
 }

@@ -8,13 +8,14 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  username  String   @unique
+  id        Int           @id @default(autoincrement())
+  username  String        @unique
   password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  email     String   @unique
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  email     String        @unique
   meals     Meal[]
+  weeklyMealPlans WeeklyMealPlan[]
 }
 
 model Meal {
@@ -35,4 +36,17 @@ model Ingredient {
   amount String
   mealId Int
   meal   Meal   @relation(fields: [mealId], references: [id])
+}
+
+model WeeklyMealPlan {
+  id          Int         @id @default(autoincrement())
+  userId      Int     
+  user        User        @relation(fields: [userId], references: [id])
+  monday      Int[]       
+  tuesday     Int[]       
+  wednesday   Int[]       
+  thursday    Int[]       
+  friday      Int[]       
+  saturday    Int[]       
+  sunday      Int[]      
 }
