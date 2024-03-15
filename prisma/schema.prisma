@@ -15,7 +15,7 @@ model User {
   updatedAt DateTime      @updatedAt
   email     String        @unique
   meals     Meal[]
-  weeklyMealPlans WeeklyMealPlan[]
+  calendars Calendar[]
 }
 
 model Meal {
@@ -28,7 +28,6 @@ model Meal {
   createdBy   User       @relation(fields: [username], references: [username])
 }
 
-
 model Ingredient {
   id     Int    @id @default(autoincrement())
   name   String
@@ -38,15 +37,15 @@ model Ingredient {
   meal   Meal   @relation(fields: [mealId], references: [id])
 }
 
-model WeeklyMealPlan {
-  id          Int         @id @default(autoincrement())
-  userId      Int     
-  user        User        @relation(fields: [userId], references: [id])
-  monday      Int[]       
-  tuesday     Int[]       
-  wednesday   Int[]       
-  thursday    Int[]       
-  friday      Int[]       
-  saturday    Int[]       
-  sunday      Int[]      
-}
+model Calendar {
+  id       Int  @unique    @id @default(autoincrement())
+  username  String @unique
+  monday String
+  tuesday String
+  wednesday String
+  thursday String
+  friday String
+  saturday String
+  sunday String
+  createdBy   User       @relation(fields: [username], references: [username])
+  }

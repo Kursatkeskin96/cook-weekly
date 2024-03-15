@@ -3,8 +3,7 @@ import { db } from '@/lib/db';
 
 export async function GET(req: Request, context: any) {
   const { params } = context;
-
-  console.log(params); // Debug: Log the params to see what you're getting
+// Debug: Log the params to see what you're getting
 
   try {
     let meal;
@@ -35,7 +34,6 @@ export async function GET(req: Request, context: any) {
           },
         }
       });
-      console.log(meal); // Debug: Log the result of the query by username
     }
 
     if (!meal || meal.length === 0) {

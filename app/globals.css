@@ -14,3 +14,19 @@
   body {
     font-family: "Lora", serif;
   }
+
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+  background-color: #f5f5f5; /* Background color of the scrollbar track */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #3C4F76; /* Color of the scrollbar thumb */
+  border-radius: 4px; /* Optional: roundness of the scrollbar thumb */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background-color: #e0e0e0; /* Color of the scrollbar track */
+  margin: 5px; /* Padding around the scrollbar track */
+}

@@ -13,6 +13,8 @@ export async function GET(req: Request, context: any ) {
       id: true,
       username: true,
       email: true,
+      meals: true,
+      calendars: true,
     }
   })
   if(!username) {

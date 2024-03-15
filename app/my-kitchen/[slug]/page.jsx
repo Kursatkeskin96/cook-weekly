@@ -83,8 +83,6 @@ export default function MyKitchen({ params, searchParams }) {
           });
     }, [slug]);
 
-    console.log(meal)
-
     if (loading) {
         return <div>Loading</div>;
       }

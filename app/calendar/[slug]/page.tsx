@@ -6,6 +6,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import calendar from '@/utils/images/calendar.png'
 import calendarfood from '@/utils/images/calendarfood.png'
+import Board from '@/components/Board';
 
 // Asynchronous function to get user data
 const getData = async (slug: any) => {
@@ -82,43 +83,7 @@ In the calendar, you can easily organize your weekly meals by dragging and dropp
                     </div>
                 ))}
     </div>
-    <div className='flex mt-10 justify-center items-center mb-10 flex-wrap gap-10'>
-        <div className=' h-72 w-60 bg-[#3C4F76] rounded-lg'>
-            <p className='text-white font-bold text-xl text-center mt-3'>Monday</p>
-            <hr className="w-[80%] h-[1px] mx-auto my-4 bg-[#FFC107] border-0 rounded"></hr>
-            <div className='w-fit mt-20 text-center mx-auto text-xs cursor-pointer bg-[#f7761e] text-white p-1 rounded-lg'>Mercimek Corbasi</div>
-        </div>
-        <div className=' h-72 w-60 bg-[#3C4F76] rounded-lg'>
-            <p className='text-white font-bold text-xl text-center mt-3'>Tuesday</p>
-            <hr className="w-[80%] h-[1px] mx-auto my-4 bg-[#FFC107] border-0 rounded"></hr>
-            <div className='w-fit mt-20 text-center mx-auto text-xs cursor-pointer bg-[#f7761e] text-white p-1 rounded-lg'>Mercimek Corbasi</div>
-        </div>
-        <div className=' h-72 w-60 bg-[#3C4F76] rounded-lg'>
-            <p className='text-white font-bold text-xl text-center mt-3'>Thursday</p>
-            <hr className="w-[80%] h-[1px] mx-auto my-4 bg-[#FFC107] border-0 rounded"></hr>
-            <div className='w-fit mt-20 text-center mx-auto text-xs cursor-pointer bg-[#f7761e] text-white p-1 rounded-lg'>Mercimek Corbasi</div>
-        </div>
-        <div className=' h-72 w-60 bg-[#3C4F76] rounded-lg'>
-            <p className='text-white font-bold text-xl text-center mt-3'>Friday</p>
-            <hr className="w-[80%] h-[1px] mx-auto my-4 bg-[#FFC107] border-0 rounded"></hr>
-            <div className='w-fit mt-20 text-center mx-auto text-xs cursor-pointer bg-[#f7761e] text-white p-1 rounded-lg'>Mercimek Corbasi</div>
-        </div>
-        <div className=' h-72 w-60 bg-[#3C4F76] rounded-lg'>
-            <p className='text-white font-bold text-xl text-center mt-3'>Monday</p>
-            <hr className="w-[80%] h-[1px] mx-auto my-4 bg-[#FFC107] border-0 rounded"></hr>
-            <div className='w-fit mt-20 text-center mx-auto text-xs cursor-pointer bg-[#f7761e] text-white p-1 rounded-lg'>Mercimek Corbasi</div>
-        </div>
-        <div className=' h-72 w-60 bg-[#3C4F76] rounded-lg'>
-            <p className='text-white font-bold text-xl text-center mt-3'>Saturday</p>
-            <hr className="w-[80%] h-[1px] mx-auto my-4 bg-[#FFC107] border-0 rounded"></hr>
-            <div className='w-fit mt-20 text-center mx-auto text-xs cursor-pointer bg-[#f7761e] text-white p-1 rounded-lg'>Mercimek Corbasi</div>
-        </div>
-        <div className=' h-72 w-60 bg-[#3C4F76] rounded-lg'>
-            <p className='text-white font-bold text-xl text-center mt-3'>Sunday</p>
-            <hr className="w-[80%] h-[1px] mx-auto my-4 bg-[#FFC107] border-0 rounded"></hr>
-            <div className='w-fit mt-20 text-center mx-auto text-xs cursor-pointer bg-[#f7761e] text-white p-1 rounded-lg'>Mercimek Corbasi</div>
-        </div>
-    </div>
+    <Board params={params} recipes={recipe}  />
 </div>
     </div>
   )
