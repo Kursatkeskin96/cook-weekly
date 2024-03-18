@@ -15,7 +15,7 @@ model User {
   updatedAt DateTime      @updatedAt
   email     String        @unique
   meals     Meal[]
-  calendars Calendar[]
+  columns Column[]
 }
 
 model Meal {
@@ -37,15 +37,17 @@ model Ingredient {
   meal   Meal   @relation(fields: [mealId], references: [id])
 }
 
-model Calendar {
-  id       Int  @unique    @id @default(autoincrement())
-  username  String @unique
-  monday String
-  tuesday String
-  wednesday String
-  thursday String
-  friday String
-  saturday String
-  sunday String
-  createdBy   User       @relation(fields: [username], references: [username])
-  }
+model Column {
+  id      Int    @id @default(autoincrement())
+  title   String
+  username String
+  user    User   @relation(fields: [username], references: [username])
+  tasks   Task[] 
+}
+
+model Task {
+  id       Int    @id @default(autoincrement())
+  content  String
+  columnId Int
+  column   Column @relation(fields: [columnId], references: [id],  onDelete: Cascade)
+}

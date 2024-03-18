@@ -57,13 +57,18 @@ function FoodCard({ recipes, task, deleteTask, updateTask }: Props) {
     transform: CSS.Transform.toString(transform),
   };
 
+  const handleSearchTermChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+  
+
   if (isDragging) {
-    return <div ref={setNodeRef} style={style} className="bg-neutral-600 relative p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl border-2 border-rose-500 cursor-grab opacity-30" />;
+    return <div ref={setNodeRef} style={style} className="bg-neutral-600 relative p-2.5 h-[100px] min-h-[100px] items-center flex text-left rounded-xl border-2 border-[#EE8434] cursor-grab opacity-30" />;
   }
 
   if (editMode) {
     return (
-      <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="bg-[#293650] text-white py-2 relative flex flex-col justify-start text-start items-start gap-2 rounded-xl hover:ring-2 hover:ring-inset hover:ring-[#D34C26]">
+      <div ref={setNodeRef} style={style} {...attributes} {...listeners} className="bg-[#2A3D41] text-white py-2 relative flex flex-col justify-start text-start items-start gap-2 rounded-xl hover:ring-2 hover:ring-inset hover:ring-[#EE8434]">
         <input
           type="text"
           value={searchTerm}
@@ -76,7 +81,7 @@ function FoodCard({ recipes, task, deleteTask, updateTask }: Props) {
             <label key={recipe.id} className="flex items-center cursor-pointer">
               <input
                 type="radio"
-                className="mr-3"
+                className="mr-3 my-2 "
                 name="recipe"
                 value={recipe.id}
                 onChange={handleRecipeSelect}
@@ -94,7 +99,7 @@ function FoodCard({ recipes, task, deleteTask, updateTask }: Props) {
       onClick={() => setEditMode(true)}
       onMouseEnter={() => setMouseIsOver(true)}
       onMouseLeave={() => setMouseIsOver(false)}
-      className="bg-[#293650] text-white relative p-2.5 h-[50px] items-center flex text-left rounded-xl hover:ring-2 hover:ring-inset hover:ring-rose-500 cursor-grab"
+      className="bg-[#2A3D41] text-white relative p-2.5 h-[50px] items-center flex text-left rounded-xl hover:ring-2 hover:ring-inset hover:ring-[#EE8434] cursor-grab"
     >
       <p className="my-auto text-white h-[90%] w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap">
         {task.content}

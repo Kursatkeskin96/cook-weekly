@@ -7,6 +7,7 @@ import Link from 'next/link';
 import calendar from '@/utils/images/calendar.png'
 import calendarfood from '@/utils/images/calendarfood.png'
 import Board from '@/components/Board';
+import { motion } from "framer-motion"
 
 // Asynchronous function to get user data
 const getData = async (slug: any) => {
@@ -59,11 +60,16 @@ export default function MyKitchen({ params, searchParams }) {
 
   return (
     <div className='lg:max-w-[90%] max-w-[90%]  mx-auto'>
+      <motion.div
+  initial={{ opacity: 0, y: 100 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}>
         <div className='flex justify-center items-center gap-5 mt-10 '>
             <hr className="w-[80%] h-[1px] mx-auto my-4 bg-[#FFC107] border-0 rounded"></hr>
             <div className='text-4xl text-[#610000] lg:w-96 cookie-regular text-center'>My Calendar</div>
             <hr className="w-[80%] h-[1px] mx-auto my-4 bg-[#FFC107] border-0 rounded"></hr>
         </div>
+    
 <div className='flex justify-between items-center mx-14 flex-wrap'>
 <div className='mt-10 mb-10 lg:mb-0 mx-auto flex justify-center items-center'>
             <Image src={calendar} width={300} height={300} alt='pic'/>
@@ -74,17 +80,26 @@ export default function MyKitchen({ params, searchParams }) {
 In the calendar, you can easily organize your weekly meals by dragging and dropping your meals onto specific days.</p>
         </div>
 </div>
-
+</motion.div>
 <div>
-    <div className='flex mt-10 justify-center items-center flex-wrap gap-4 bg-[#e6eafe]  rounded-[16px] py-10'>
+<motion.div
+  initial={{ opacity: 0, x: 100 }}
+  animate={{ opacity: 1, x: 0 }}
+  transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}>
+<div className=' bg-[#1d2a2d] rounded-[16px] mt-20 mb-5 py-5'>
+  <h3 className='text-center text-3xl text-[#ee8434] pb-5'>Your Meals</h3>
+  <div className='flex flex-wrap justify-center items-center'>
     {recipe.map((recipe: any) => (
-                    <div key={recipe.id} className='w-fit text-xs cursor-pointer bg-[#f7761e] text-white p-1 rounded-lg'>
-                        {recipe.name} 
-                    </div>
-                ))}
-    </div>
-    <Board params={params} recipes={recipe}  />
+      <div key={recipe.id} className='m-2 text-xs text-[#eff3f7] border-b-2 border-black p-1 rounded-lg'>
+        {recipe.name}
+      </div>
+    ))}
+  </div>
 </div>
+    <Board params={params} recipes={recipe}  />
+    </motion.div>
+</div>
+
     </div>
   )
 }

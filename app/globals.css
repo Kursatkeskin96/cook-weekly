@@ -22,7 +22,7 @@
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #3C4F76; /* Color of the scrollbar thumb */
+  background-color: #2A3D41; /* Color of the scrollbar thumb */
   border-radius: 4px; /* Optional: roundness of the scrollbar thumb */
 }
 
