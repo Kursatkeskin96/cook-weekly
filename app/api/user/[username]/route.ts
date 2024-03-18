@@ -14,7 +14,7 @@ export async function GET(req: Request, context: any ) {
       username: true,
       email: true,
       meals: true,
-      calendars: true,
+      columns: true,
     }
   })
   if(!username) {
