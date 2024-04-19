@@ -17,10 +17,18 @@ export default function Form() {
   const [ingredients, setIngredients] = useState([{ id: Date.now(), name: '', unit: '', amount: '' }]);
 
   const next = () => {
+    if (currentStep === 0) {
+      if (!mealName.trim()) {
+        toast.error("Please enter a meal name.");
+        return;
+      }
+    }
+  
     if (currentStep < steps.length - 1) {
-      setCurrentStep((step) => step + 1);
+      setCurrentStep(step => step + 1);
     }
   };
+  
 
   const prev = () => {
     if (currentStep > 0) {
@@ -195,6 +203,7 @@ const handleInputChange = (id, field, value) => {
                </div>
      
 
+<<<<<<< Updated upstream
              </div>
            ))}
      
@@ -206,6 +215,82 @@ const handleInputChange = (id, field, value) => {
              +
            </button>
          </>
+=======
+                  <div className="flex justify-center items-center gap-10">
+                    <div>
+                      <label
+                        htmlFor={`measurement-unit-${index}`}
+                        className="text-sm"
+                      >
+                        Measurement
+                      </label>
+                      <select
+                        id={`measurement-unit-${index}`}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#610000] focus:border-[#610000] focus:outline-none block w-full p-2.5"
+                        value={ingredient.unit}
+                        onChange={(e) =>
+                          handleInputChange(
+                            ingredient.id,
+                            "unit",
+                            e.target.value
+                          )
+                        }
+                      >
+                        <option value="">Choose</option>
+                        <option value="g">g</option>
+                        <option value="ml">ml</option>
+                        <option value="tbsp">tbsp</option>
+                        <option value="tsp">tsp</option>
+                        <option value="unit">Unit</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label
+                        className="text-sm"
+                        htmlFor={`ingredient-amount-${index}`}
+                      >
+                        Amount
+                      </label>
+                      <input
+                        type="text"
+                        id={`ingredient-amount-${index}`}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#610000] focus:border-[#610000] focus:outline-none block w-full p-2.5"
+                        placeholder="100"
+                        value={ingredient.amount}
+                        onChange={(e) =>
+                          handleInputChange(
+                            ingredient.id,
+                            "amount",
+                            e.target.value
+                          )
+                        }
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="">
+                    {" "}
+                    <button
+                      type="button"
+                      onClick={() => deleteIngredient(ingredient.id)}
+                      className="p-2 mt-5 bg-[#bb2124] text-white rounded-lg"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            <button
+              type="button"
+              onClick={addIngredient}
+              className="mt-4 w-10 h-10 text-lg font-bold rounded-[50%] bg-[#610000] text-white "
+            >
+              +
+            </button>
+          </>
+>>>>>>> Stashed changes
         )}
          {currentStep === 2 && ( 
           <>
