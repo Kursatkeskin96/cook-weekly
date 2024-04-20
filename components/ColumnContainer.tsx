@@ -1,5 +1,5 @@
 'use client'
-import { Column, Id, Recipe, Task } from "@/tyoes";
+import { Column, Id, Recipe, Task } from "@/types";
 import React, { useMemo, useState, useEffect } from "react";
 import { MdDelete } from "react-icons/md";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";

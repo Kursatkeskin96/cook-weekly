@@ -1,4 +1,4 @@
-import { Id, Recipe, Task } from "@/tyoes";
+import { Id, Recipe, Task } from "@/types";
 import { useSortable } from "@dnd-kit/sortable";
 import React, { useState } from "react";
 import { CSS } from "@dnd-kit/utilities";
