@@ -122,11 +122,155 @@ export default function Form() {
             </div>
           </>
         )}
-        {/* Include other steps and their forms similar to Step 1 */}
+     {currentStep === 1 && (
+           <>
+           <h3 className="text-2xl">Add Ingredients</h3>
+           <p className="text-gray-400">You can either enter ingridients of your meal or proceed to the next step.</p>
+           {ingredients.map((ingredient, index) => (
+             <div key={ingredient.id} className="mt-10 flex justify-between items-center">
+               <div className="flex gap-20 items-center">
+                 <div>
+                   <label className="text-sm" htmlFor={`ingredient-name-${index}`}>Ingredient</label>
+                   <input
+                     type="text"
+                     id={`ingredient-name-${index}`}
+                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#610000] focus:border-[#610000] focus:outline-none block w-full p-2.5"
+                     placeholder="Chicken Wing"
+                     value={ingredient.name}
+                     onChange={(e) => handleInputChange(ingredient.id, 'name', e.target.value)}
+                     required
+                   />
+                 </div>
+     
+                 <div className="flex justify-center items-center gap-10">
+                   <div>
+                     <label htmlFor={`measurement-unit-${index}`} className="text-sm">Measurement</label>
+                     <select
+                       id={`measurement-unit-${index}`}
+                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#610000] focus:border-[#610000] focus:outline-none block w-full p-2.5"
+                       value={ingredient.unit}
+                       onChange={(e) => handleInputChange(ingredient.id, 'unit', e.target.value)}
+                     >
+                      <option value="">Choose</option>
+                       <option value="g">g</option>
+                       <option value="ml">ml</option>
+                       <option value="tbsp">tbsp</option>
+                       <option value="tsp">tsp</option>
+                     </select>
+                   </div>
+                   <div>
+                     <label className="text-sm" htmlFor={`ingredient-amount-${index}`}>Amount</label>
+                     <input
+                       type="text"
+                       id={`ingredient-amount-${index}`}
+                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#610000] focus:border-[#610000] focus:outline-none block w-full p-2.5"
+                       placeholder="100"
+                       value={ingredient.amount}
+                       onChange={(e) => handleInputChange(ingredient.id, 'amount', e.target.value)}
+                       required
+                     />
+                   </div>
+                 </div>
+                 <div className="">   <button
+                 type="button"
+                 onClick={() => deleteIngredient(ingredient.id)}
+                 className="p-2 mt-5 bg-[#bb2124] text-white rounded-lg"
+               >
+                 Delete
+               </button></div>
+               </div>
+     
+
+                  <div className="flex justify-center items-center gap-10">
+                    <div>
+                      <label
+                        htmlFor={`measurement-unit-${index}`}
+                        className="text-sm"
+                      >
+                        Measurement
+                      </label>
+                      <select
+                        id={`measurement-unit-${index}`}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#610000] focus:border-[#610000] focus:outline-none block w-full p-2.5"
+                        value={ingredient.unit}
+                        onChange={(e) =>
+                          handleInputChange(
+                            ingredient.id,
+                            "unit",
+                            e.target.value
+                          )
+                        }
+                      >
+                        <option value="">Choose</option>
+                        <option value="g">g</option>
+                        <option value="ml">ml</option>
+                        <option value="tbsp">tbsp</option>
+                        <option value="tsp">tsp</option>
+                        <option value="unit">Unit</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label
+                        className="text-sm"
+                        htmlFor={`ingredient-amount-${index}`}
+                      >
+                        Amount
+                      </label>
+                      <input
+                        type="text"
+                        id={`ingredient-amount-${index}`}
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#610000] focus:border-[#610000] focus:outline-none block w-full p-2.5"
+                        placeholder="100"
+                        value={ingredient.amount}
+                        onChange={(e) =>
+                          handleInputChange(
+                            ingredient.id,
+                            "amount",
+                            e.target.value
+                          )
+                        }
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="">
+                    {" "}
+                    <button
+                      type="button"
+                      onClick={() => deleteIngredient(ingredient.id)}
+                      className="p-2 mt-5 bg-[#bb2124] text-white rounded-lg"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+            ))}
+
+            <button
+              type="button"
+              onClick={addIngredient}
+              className="mt-4 w-10 h-10 text-lg font-bold rounded-[50%] bg-[#610000] text-white "
+            >
+              +
+            </button>
+          </>
+        )}
+         {currentStep === 2 && ( 
+  <>
+  <h3 className="text-2xl">Almost Done!</h3>
+<p className="text-gray-400 mb-10">Please click on submit button to save your ingredient.</p>
+<button
+  className="bg-[#610000] hover:bg-[#610000d0] mb-20 text-white w-40 rounded-[16px] py-1"
+  onClick={handleSubmit}
+>
+  Submit
+</button>
+</>
+         )}
       </form>
-      {/* Navigation buttons */}
+      {/* Navigation */}
       <div className="mt-8 pt-5 mb-5 flex justify-between items-center">
-        <button className={`w-28 py-1 rounded-sm ${currentStep === 0 ? 'bg-gray-500 text-white' : 'bg-[#D34C26] text-white'}`} onClick={prev} disabled={currentStep === 0}>Prev</button>
+        <button  className={`w-28 py-1 rounded-sm ${currentStep === 0 ? 'bg-gray-500 text-white' : 'bg-[#D34C26] text-white'}`} onClick={prev} disabled={currentStep===0}>Prev</button>
         <button className={`w-28 py-1 rounded-sm ${currentStep === steps.length - 1 ? 'bg-gray-500' : 'bg-[#D34C26] text-white'}`} onClick={next} disabled={currentStep === steps.length - 1}>Next</button>
       </div>
     </section>
