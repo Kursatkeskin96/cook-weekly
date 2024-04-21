@@ -57,7 +57,6 @@ export default function MyKitchen({ params, searchParams }) {
     if (loading) {
         return <div>Loading</div>;
       }
-
   return (
     <div className='lg:max-w-[90%] max-w-[90%]  mx-auto'>
       <motion.div

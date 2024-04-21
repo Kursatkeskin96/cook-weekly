@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { Column, Id, Recipe, Task } from "@/types";
 import React, { useMemo, useState, useEffect } from "react";
 import { MdDelete } from "react-icons/md";
@@ -13,14 +13,12 @@ interface Props {
   updateColumn: (id: Id, title: string) => void;
   createTask: (columnId: Id) => void;
   tasks: Task[];
-  updateTask: (id: Id, content: string) => void
+  updateTask: (id: Id, content: string) => void;
   deleteTask: (id: Id) => void;
   recipes: Recipe[];
 }
 
-
-function ColumnContainer( props: Props) {
- 
+function ColumnContainer(props: Props) {
   const {
     column,
     deleteColumn,
@@ -33,10 +31,15 @@ function ColumnContainer( props: Props) {
   } = props;
 
   const [editMode, setEditMode] = useState(false);
+  const [title, setTitle] = useState(column.title); // Local state to handle title editing
+
+  useEffect(() => {
+    setTitle(column.title); // Synchronize external changes to the title
+  }, [column.title]);
 
   const taskIds = useMemo(() => {
-    return tasks.map(task => task.id)
-  }, [tasks])
+    return tasks.map((task) => task.id);
+  }, [tasks]);
 
   const {
     setNodeRef,
@@ -58,8 +61,21 @@ function ColumnContainer( props: Props) {
     transition,
     transform: CSS.Transform.toString(transform),
   };
+  const handleTitleChange = (e) => {
+    setTitle(e.target.value);
+  };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      updateColumn(column.id, title); // Update the title in the parent state
+      setEditMode(false); // Exit edit mode
+    }
+  };
 
+  const handleBlur = () => {
+    updateColumn(column.id, title); // Ensure changes are saved when losing focus
+    setEditMode(false); // Exit edit mode
+  };
   if (isDragging) {
     return (
       <div
@@ -85,23 +101,19 @@ function ColumnContainer( props: Props) {
         className=" bg-[#2a3d41] p-3 font-bold border-4 flex items-center justify-between border-[#1D2A2D] text-white cursor-grab rounded-md rounded-b-none"
       >
         <div className="flex gap-2 items-center">
-
-          {!editMode && column.title}
-          {editMode && (
-            <input
-              className="bg-black text-white focus:border-[#EE8434] border px-2 rounded outline-none"
-              value={column.title}
-              onChange={(e) => updateColumn(column.id, e.target.value)}
-              autoFocus
-              onBlur={() => {
-                setEditMode(false);
-              }}
-              onKeyDown={(e) => {
-                if (e.key !== "Enter" && e.shiftKey) return setEditMode(false);
-              }}
-            />
-          )}
-        </div>
+        {editMode ? (
+          <input
+            className="bg-black text-white focus:border-[#EE8434] border px-2 rounded outline-none"
+            value={title}
+            onChange={handleTitleChange}
+            autoFocus
+            onBlur={handleBlur}
+            onKeyDown={handleKeyDown}
+          />
+        ) : (
+          <div onClick={() => setEditMode(true)}>{title}</div>
+        )}
+      </div>
         <button
           onClick={() => {
             deleteColumn(column.id);
@@ -114,9 +126,15 @@ function ColumnContainer( props: Props) {
 
       <div className="flex flex-grow flex-col gap-4 p-2 overflow-x-hidden overflow-y-auto">
         <SortableContext items={taskIds}>
-        {tasks.map((task) => (
-          <FoodCard recipes={recipes} key={task.id} deleteTask={deleteTask} updateTask={updateTask} task={task} />
-        ))}
+          {tasks.map((task) => (
+            <FoodCard
+              recipes={recipes}
+              key={task.id}
+              deleteTask={deleteTask}
+              updateTask={updateTask}
+              task={task}
+            />
+          ))}
         </SortableContext>
       </div>
       <div>
@@ -132,5 +150,4 @@ function ColumnContainer( props: Props) {
     </div>
   );
 }
-
 export default ColumnContainer;

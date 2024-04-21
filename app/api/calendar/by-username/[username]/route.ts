@@ -64,3 +64,49 @@ export async function DELETE(req: Request, context: any) {
     return NextResponse.json({ message: 'Failed to delete the columns', error: "error" }, { status: 500 });
   }
 }
+
+export async function PUT(req: Request, context: any) {
+  const { params } = context;
+  const username = params.username; // Extract username from the URL parameter
+
+  try {
+      const data = await req.json(); // Assuming the body contains the new state of the calendar
+
+      if (!username) {
+          return NextResponse.json({ message: 'Username is required' }, { status: 400 });
+      }
+
+      // Start a transaction to update the entire calendar for the user
+      const updatedCalendar = await db.$transaction(async (prisma) => {
+          // Optionally, you might want to first delete all existing columns to replace them completely
+          await prisma.column.deleteMany({
+              where: { username: username }
+          });
+
+          // Process each column and their tasks
+          const columnPromises = data.columns.map(column => {
+              return prisma.column.create({
+                  data: {
+                      title: column.title,
+                      username: username, // Make sure columns are linked to the correct user
+                      tasks: {
+                          createMany: {
+                              data: column.tasks.map(task => ({
+                                  content: task.content
+                              }))
+                          }
+                      }
+                  }
+              });
+          });
+
+          return await Promise.all(columnPromises); // Execute all operations simultaneously within the transaction
+      });
+
+      return NextResponse.json({ calendar: updatedCalendar, message: 'Calendar updated successfully' }, { status: 200 });
+  } catch (error) {
+      console.error('Error updating calendar:', error);
+      return NextResponse.json({ message: 'Failed to update calendar', error: 'err' }, { status: 500 });
+  }
+}
+

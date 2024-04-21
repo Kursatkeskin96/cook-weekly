@@ -1,14 +1,12 @@
 "use client";
-import {Calendar, Column, Id, Task } from "@/types";
+import { Calendar, Column, Id, Task } from "@/types";
 import React, { useMemo, useState, useEffect } from "react";
 import { CiCirclePlus } from "react-icons/ci";
 import ColumnContainer from "./ColumnContainer";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { ToastContainer, toast } from 'react-toastify';
-
 import 'react-toastify/dist/ReactToastify.css';
-import 'react-toastify/dist/ReactToastify.min.css';
 import {
   DndContext,
   DragOverlay,
@@ -25,18 +23,17 @@ import FoodCard from "./FoodCard";
 
 const getCalendarData = async (slug: any) => {
   let domain;
-  let protocol = 'http://'; // Default protocol for local development
-  
-  if (typeof window !== 'undefined') {
+  let protocol = "http://"; // Default protocol for local development
+
+  if (typeof window !== "undefined") {
     const currentURL = window.location.href;
     const urlParts = currentURL.split("/");
     domain = urlParts[2]; // Gets the domain part of the URL
     protocol = urlParts[0]; // Gets the protocol (http: or https:)
   } else {
-    domain = 'defaultDomainHere'; 
-
+    domain = "defaultDomainHere";
   }
-  const api = `${protocol}//${domain}`; 
+  const api = `${protocol}//${domain}`;
   const res = await fetch(`${api}/api/calendar/by-username/${slug}`);
   if (!res.ok) {
     throw new Error("Failed to fetch calendar data");
@@ -44,13 +41,11 @@ const getCalendarData = async (slug: any) => {
   return res.json();
 };
 
-
-
 export default function Board({ params, recipes }) {
   const { slug } = params;
-  const router = useRouter()
+  const router = useRouter();
   const { data: session } = useSession();
-  const username = session?.user?.username
+  const username = session?.user?.username;
   const [columns, setColumns] = useState<Column[]>([
     // Initialize with a default column, you might want to customize this
   ]);
@@ -63,27 +58,35 @@ export default function Board({ params, recipes }) {
 
   const [portalReady, setPortalReady] = useState(false);
 
-  const [calendar, setCalendar] = useState<Calendar>([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [isSaved, setIsSaved] = useState(false)
-
-
+  const [calendar, setCalendar] = useState<Calendar>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [isSaved, setIsSaved] = useState(false);
   useEffect(() => {
-    // Fetch user data and referredBy count
     getCalendarData(slug)
-    .then(data => {
-        setCalendar(data.calendar);
+      .then(data => {
+        if (data.calendar && data.calendar.length > 0) {
+          setColumns(data.calendar);
+          setIsSaved(true); // Set true if data exists
+          // Extract and set tasks if necessary
+          const allTasks = data.calendar.reduce((acc, column) => [...acc, ...column.tasks], []);
+          setTasks(allTasks);
+        } else {
+          console.log('No calendar data available');
+          setIsSaved(false); // Set false if no data exists
+        }
         setLoading(false);
       })
       .catch(error => {
         setError(error.message);
         setLoading(false);
+        setIsSaved(false); // Ensure it's false on error
         console.error("Error fetching calendar data:", error);
       });
-}, [slug]);
-
-
+  }, [slug]);
+  
+  
+  
   useEffect(() => {
     setPortalReady(true);
   }, []);
@@ -96,23 +99,57 @@ export default function Board({ params, recipes }) {
     })
   );
 
-  const deleteCalendar = async () => {
+  const updateCalendar = async () => {
+    if (!username) {
+      console.error("User is not logged in");
+      return;
+    }
+  
+    const boardData = {
+      username: username,
+      columns: columns.map(column => ({
+        title: column.title,
+        tasks: tasks.filter(task => task.columnId === column.id).map(task => ({
+          content: task.content
+        }))
+      }))
+    };
+  
     try {
-      const response = await fetch(`/api/calendar/by-username/${username}`, { 
-        method: 'DELETE',
+      const response = await fetch(`/api/calendar/by-username/${username}`, {
+        method: 'PUT', // Using PUT method
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(boardData),
       });
+  
       if (!response.ok) {
-        throw new Error('Failed to delete the calendar');
+        throw new Error('Failed to update the board');
       }
-      setIsSaved(false)
-      toast.error("Calendar has been deleted!");
-      router.push('/')
+  
+      setIsSaved(true); // You might want to update this based on the response
+      toast.success("Calendar updated successfully!");
     } catch (error) {
-      console.error('Error deleting calendar:', error);
+      console.error('Error updating calendar:', error);
+      toast.error("Error updating calendar: ");
     }
   };
   
-  
+
+  const deleteCalendar = async () => {
+    try {
+      const response = await fetch(`/api/calendar/by-username/${username}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete the calendar");
+      }
+      setIsSaved(false);
+      router.push('/')
+    } catch (error) {
+      console.error("Error deleting calendar:", error);
+    }
+  };
+
   const saveCalendar = async () => {
     if (!username) {
       console.error("User is not logged in");
@@ -123,127 +160,138 @@ export default function Board({ params, recipes }) {
       username: username,
       columns: columns.map((column) => ({
         title: column.title,
-        tasks: tasks.filter((task) => task.columnId === column.id).map((task) => ({
-          content: task.content
-        }))
-      }))
+        tasks: tasks
+          .filter((task) => task.columnId === column.id)
+          .map((task) => ({
+            content: task.content,
+          })),
+      })),
     };
 
     try {
-      const response = await fetch('/api/calendar', {
-        method: 'POST',
+      const response = await fetch("/api/calendar", {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(boardData),
-          
       });
       if (!response.ok) {
-        throw new Error('Failed to save the board');
+        throw new Error("Failed to save the board");
       }
-      setIsSaved(true)
-      toast.success("Calendar has been saved!");
-      console.log('Board saved successfully');
+      setIsSaved(true);
+      console.log("Board saved successfully");
     } catch (error) {
       console.error(error);
     }
   };
 
-
   return (
     <div className="m-auto min-h-screen w-full items-c px-[40px]">
-                 <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+              <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+        />
       <DndContext
         onDragOver={onDragOver}
         sensors={sensors}
         onDragStart={onDragStart}
         onDragEnd={onDragEnd}
       >
-        {isSaved ? (
-           <div className="display-block flex justify-center items-center">
-          <div><button className="bg-[#610000] h-[30px] my-10 flex mx-5 justify-center items-center text-white w-[200px] min-w-[200px] cursor-pointer rounded-lg shadow-lg  p-4 hover:bg-[#610000b5]" onClick={() => {
-            deleteCalendar()
-          }}>Delete Calendar</button></div>
-          </div>
-        ) : (
-          <div className="display-block flex justify-center items-center">
-          <button
-                  onClick={() => {
-                    createNewColumn();
-                  }}
-              className="h-[30px] my-10 flex mx-5 justify-center items-center text-white w-[200px] min-w-[200px] cursor-pointer rounded-lg bg-[#1d2a2d] shadow-lg  p-4 hover:bg-[#1d2a2dca]"
-            >
-              
-              <CiCirclePlus className="mr-2 text-2xl" />
-              Add Day
-            </button>
-            <button
-              onClick={() => {
-                saveCalendar();
-              }}
-              className="h-[30px] my-10 mx-5 flex justify-center items-center text-white w-[200px] min-w-[200px] cursor-pointer rounded-lg bg-[#ee8434]  shadow-lg p-4 hover:bg-[#ee8434b8] "
-            >
-           
-             Save
-            </button>
-          </div>
-        )}
-       
+          {isSaved ? (
+                <div className="display-block flex justify-center items-center">
+                                                  <button
+                        onClick={() => {
+                            createNewColumn();
+                        }}
+                        className="h-[30px] my-10 flex mx-5 justify-center items-center text-white w-[200px] min-w-[200px] cursor-pointer rounded-lg bg-[#1d2a2d] shadow-lg  p-4 hover:bg-[#1d2a2dca]"
+                    >
+                        <CiCirclePlus className="mr-2 text-2xl" />
+                        Add Day
+                    </button>
+                    <button
+                        onClick={updateCalendar}
+                        className="h-[30px] my-10 flex mx-5 justify-center items-center text-white w-[200px] min-w-[200px] cursor-pointer rounded-lg bg-[#1d2a2d] shadow-lg  p-4 hover:bg-[#1d2a2dca]"
+                    >
+                        Edit Calendar
+                    </button>
+                    <button
+                        onClick={deleteCalendar}
+                        className="bg-[#610000] h-[30px] my-10 flex mx-5 justify-center items-center text-white w-[200px] min-w-[200px] cursor-pointer rounded-lg shadow-lg  p-4 hover:bg-[#610000b5]"
+                    >
+                        Delete Calendar
+                    </button>
+                </div>
+            ) : (
+                <div className="display-block flex justify-center items-center">
+                    <button
+                        onClick={() => {
+                            createNewColumn();
+                        }}
+                        className="h-[30px] my-10 flex mx-5 justify-center items-center text-white w-[200px] min-w-[200px] cursor-pointer rounded-lg bg-[#1d2a2d] shadow-lg  p-4 hover:bg-[#1d2a2dca]"
+                    >
+                        <CiCirclePlus className="mr-2 text-2xl" />
+                        Add Day
+                    </button>
+                    <button
+                        onClick={saveCalendar}
+                        className="h-[30px] my-10 mx-5 flex justify-center items-center text-white w-[200px] min-w-[200px] cursor-pointer rounded-lg bg-[#ee8434]  shadow-lg p-4 hover:bg-[#ee8434b8] "
+                    >
+                        Save Calendar
+                    </button>
+                </div>
+            )}
+
         <div className="m-auto flex gap-4">
-        <div className="m-auto flex gap-4 flex-wrap justify-center items-center">
+          <div className="m-auto flex gap-4 flex-wrap justify-center items-center">
             <SortableContext items={columnsId}>
               {columns.map((col) => (
                 <ColumnContainer
-                  key={col.id}
-                  column={col}
-                  deleteColumn={deleteColumn}
-                  updateColumn={updateColumn}
-                  createTask={createTask}
-                  tasks={tasks.filter((task) => task.columnId === col.id)}
-                  deleteTask={deleteTask}
-                  updateTask={updateTask}
-                  recipes={recipes}
-                />
+  key={col.id}
+  column={col}
+  deleteColumn={deleteColumn}
+  updateColumn={updateColumn}
+  createTask={createTask}
+  tasks={tasks.filter((task) => task.columnId === col.id)}
+  deleteTask={deleteTask}
+  updateTask={updateTask}
+  recipes={recipes}
+/>
+
               ))}
             </SortableContext>
             <SortableContext items={columnsId}>
-                    {calendar && (
-          <div className="m-auto flex gap-4 flex-wrap justify-center items-center">
-          {calendar && (
-  <div className="m-auto flex gap-4 flex-wrap justify-center items-center">
-    {calendar.map((col) => (
-      <ColumnContainer
-        key={col.id}
-        column={col}
-        deleteColumn={deleteColumn}
-        updateColumn={updateColumn}
-        createTask={createTask}
-        tasks={col.tasks}
-        deleteTask={deleteTask}
-        updateTask={updateTask}
-        recipes={recipes}
-      />
-    ))}
-  </div>
-)}
-
-          </div>
-        )}
+              {calendar && (
+                <div className="m-auto flex gap-4 flex-wrap justify-center items-center">
+                  {calendar && (
+                    <div className="m-auto flex gap-4 flex-wrap justify-center items-center">
+                      {calendar.map((col) => (
+                        <ColumnContainer
+                          key={col.id}
+                          column={col}
+                          deleteColumn={deleteColumn}
+                          updateColumn={updateColumn}
+                          createTask={createTask}
+                          tasks={col.tasks}
+                          deleteTask={deleteTask}
+                          updateTask={updateTask}
+                          recipes={recipes}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </SortableContext>
           </div>
-
         </div>
 
-     
         {portalReady &&
           createPortal(
             <DragOverlay>
@@ -255,7 +303,9 @@ export default function Board({ params, recipes }) {
                   createTask={createTask}
                   deleteTask={deleteTask}
                   updateTask={updateTask}
-                  tasks={tasks.filter((task) => task.columnId === activeColumn.id)}
+                  tasks={tasks.filter(
+                    (task) => task.columnId === activeColumn.id
+                  )}
                   recipes={recipes}
                 />
               )}
@@ -302,7 +352,7 @@ export default function Board({ params, recipes }) {
     const columnToAdd: Column = {
       id: generateId(),
       title: `Day ${columns.length + 1}`,
-      tasks: []
+      tasks: [],
     };
 
     setColumns([...columns, columnToAdd]);

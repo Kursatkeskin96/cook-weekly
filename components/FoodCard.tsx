@@ -107,7 +107,7 @@ function FoodCard({ recipes, task, deleteTask, updateTask }: Props) {
       {mouseIsOver && (
         <button
           onClick={(e) => {
-            e.stopPropagation(); // Prevent toggling editMode when deleting
+            e.stopPropagation(); 
             deleteTask(task.id);
           }}
           className="stroke-white absolute right-4 top-1/2 -translate-y-1/2"
