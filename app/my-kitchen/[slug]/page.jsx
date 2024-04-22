@@ -5,7 +5,9 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import mykitchen from "@/utils/images/mykitchen.png";
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import 'react-toastify/dist/ReactToastify.min.css';
 import { MdDelete } from "react-icons/md";
 import { CiEdit } from "react-icons/ci";
 
@@ -112,6 +114,7 @@ export default function MyKitchen({ params, searchParams }) {
 
   return (
     <div className="lg:max-w-[80%] max-w-[90%]  mx-auto">
+         <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" />
       <div className="flex justify-center items-center gap-5 mt-10 ">
         <hr className="w-[80%] h-[1px] mx-auto my-4 bg-[#FFC107] border-0 rounded"></hr>
         <div className="text-4xl text-[#610000] lg:w-96 cookie-regular text-center">
@@ -181,41 +184,40 @@ export default function MyKitchen({ params, searchParams }) {
         </form>
       </div>
       <div className="flex justify-center items-center gap-5 flex-wrap my-20">
-        {meal
-          .filter((m) =>
-            m.name.toLowerCase().includes(searchTerm.toLowerCase())
-          )
-          .map((filteredMeal) => (
-            <div key={filteredMeal.id}>
-              <div className="flex flex-col justify-between items-center bg-[#1D2A2D] border-[1px] border-[#3C4F76] w-[200px] h-[100px] py-2 rounded-[16px]">
-                <div className="flex flex-col h-[100%] justify-between items-center">
-                  <div className="flex justify-center items-center">
-                    <h3 className="text-white w-[70%] text-center font-bold">
-                      {filteredMeal.name}
-                    </h3>
-                  </div>
-                </div>
-                <div>
-                  <div className="flex justify-center text-xs gap-4 text-center items-center ">
-                    <Link
-                      href={`/my-kitchen/${slug}/recipe-details/${meal.id}`}
-                    >
-                      <button className="bg-[#D34C26] text-white p-1 w-14 rounded-lg cursor-pointer">
-                        Details
-                      </button>
-                    </Link>
-                    <button
-                      className="bg-red-700 text-white p-1 w-14 rounded-lg cursor-pointer"
-                      onClick={() => deleteMeal(meal.id)}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              </div>
+  {meal
+    .filter((m) =>
+      m.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .map((filteredMeal) => (
+      <div key={filteredMeal.id}>
+        <div className="flex flex-col justify-between items-center bg-[#1D2A2D] border-[1px] border-[#3C4F76] w-[200px] h-[100px] py-2 rounded-[16px]">
+          <div className="flex flex-col h-[100%] justify-between items-center">
+            <div className="flex justify-center items-center">
+              <h3 className="text-white w-[70%] text-center font-bold">
+                {filteredMeal.name}
+              </h3>
             </div>
-          ))}
+          </div>
+          <div>
+            <div className="flex justify-center text-xs gap-4 text-center items-center ">
+              <Link href={`/my-kitchen/${slug}/recipe-details/${filteredMeal.id}`}>
+                <button className="bg-[#D34C26] text-white p-1 w-14 rounded-lg cursor-pointer">
+                  Details
+                </button>
+              </Link>
+              <button
+                className="bg-red-700 text-white p-1 w-14 rounded-lg cursor-pointer"
+                onClick={() => deleteMeal(filteredMeal.id)}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
+    ))}
+</div>
+
     </div>
   );
 }

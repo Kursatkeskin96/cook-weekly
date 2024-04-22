@@ -70,29 +70,32 @@ const handleInputChange = (id, field, value) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-   // Filter out empty or incomplete ingredients
-   const filteredIngredients = ingredients.filter(ingredient => 
-    ingredient.name.trim() && ingredient.unit.trim() && ingredient.amount.trim()
-  );
-
-  const payload = {
-    mealName,
-    ingredients: filteredIngredients,
-    userName: session?.user?.username
-  };
-
+    
+    // Filter out empty or incomplete ingredients
+    const filteredIngredients = ingredients.filter(ingredient =>
+      ingredient.name.trim() && ingredient.unit.trim() && ingredient.amount.trim()
+    );
+  
+    const payload = {
+      mealName,
+      ingredients: filteredIngredients,
+      userName: session?.user?.username
+    };
+  
     const response = await fetch('/api/recipe', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
+  
     if (response.ok) {
       router.push(`/my-kitchen/${session?.user?.username}`)
-      alert('Meal created successfully!');
+      toast.success('Meal created successfully!');
     } else {
-      alert('Failed to create meal.');
+      toast.error('Failed to create meal.');
     }
   };
+  
 
   return (
     <section className="max-w-[80%] mx-auto mt-10">

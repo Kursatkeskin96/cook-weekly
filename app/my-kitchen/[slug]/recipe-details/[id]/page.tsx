@@ -7,6 +7,9 @@ import Link from "next/link";
 import ReactTimeAgo from "react-time-ago";
 import en from "javascript-time-ago/locale/en";
 import TimeAgo from "javascript-time-ago";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 TimeAgo.addDefaultLocale(en);
 
@@ -81,8 +84,8 @@ export default function MyKitchen({ params, searchParams }) {
         const updatedMeals = meal.ingredients.filter((m) => m.id !== mealId);
         setMeal({...meal, ingredients: updatedMeals});
       }
-
-      console.log("Meal deleted successfully");
+      router.push(`/my-kitchen/${session?.user?.username}`)
+      toast.success('Meal created successfully!')
     } catch (error) {
       console.error("Error deleting meal:", error);
     }
@@ -98,6 +101,7 @@ export default function MyKitchen({ params, searchParams }) {
 
   return (
     <div className="lg:max-w-[80%] max-w-[90%] mx-auto">
+         <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" />
       <div className="flex justify-center items-center gap-5 mt-10">
         <hr className="w-[80%] h-[1px] mx-auto my-4 bg-[#FFC107] border-0 rounded"></hr>
         <div className="text-4xl text-[#610000] lg:w-96 cookie-regular text-center">

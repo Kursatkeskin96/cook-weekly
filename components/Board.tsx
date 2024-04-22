@@ -5,8 +5,8 @@ import { CiCirclePlus } from "react-icons/ci";
 import ColumnContainer from "./ColumnContainer";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import {
   DndContext,
   DragOverlay,
@@ -64,29 +64,30 @@ export default function Board({ params, recipes }) {
   const [isSaved, setIsSaved] = useState(false);
   useEffect(() => {
     getCalendarData(slug)
-      .then(data => {
+      .then((data) => {
         if (data.calendar && data.calendar.length > 0) {
           setColumns(data.calendar);
           setIsSaved(true); // Set true if data exists
           // Extract and set tasks if necessary
-          const allTasks = data.calendar.reduce((acc, column) => [...acc, ...column.tasks], []);
+          const allTasks = data.calendar.reduce(
+            (acc, column) => [...acc, ...column.tasks],
+            []
+          );
           setTasks(allTasks);
         } else {
-          console.log('No calendar data available');
+          console.log("No calendar data available");
           setIsSaved(false); // Set false if no data exists
         }
         setLoading(false);
       })
-      .catch(error => {
+      .catch((error) => {
         setError(error.message);
         setLoading(false);
         setIsSaved(false); // Ensure it's false on error
         console.error("Error fetching calendar data:", error);
       });
   }, [slug]);
-  
-  
-  
+
   useEffect(() => {
     setPortalReady(true);
   }, []);
@@ -104,36 +105,37 @@ export default function Board({ params, recipes }) {
       console.error("User is not logged in");
       return;
     }
-  
+
     const boardData = {
       username: username,
-      columns: columns.map(column => ({
+      columns: columns.map((column) => ({
         title: column.title,
-        tasks: tasks.filter(task => task.columnId === column.id).map(task => ({
-          content: task.content
-        }))
-      }))
+        tasks: tasks
+          .filter((task) => task.columnId === column.id)
+          .map((task) => ({
+            content: task.content,
+          })),
+      })),
     };
-  
+
     try {
       const response = await fetch(`/api/calendar/by-username/${username}`, {
-        method: 'PUT', // Using PUT method
+        method: "PUT", // Using PUT method
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(boardData),
       });
-  
+
       if (!response.ok) {
-        throw new Error('Failed to update the board');
+        throw new Error("Failed to update the board");
       }
-  
+
       setIsSaved(true); // You might want to update this based on the response
       toast.success("Calendar updated successfully!");
     } catch (error) {
-      console.error('Error updating calendar:', error);
+      console.error("Error updating calendar:", error);
       toast.error("Error updating calendar: ");
     }
   };
-  
 
   const deleteCalendar = async () => {
     try {
@@ -144,7 +146,7 @@ export default function Board({ params, recipes }) {
         throw new Error("Failed to delete the calendar");
       }
       setIsSaved(false);
-      router.push('/')
+      router.push("/");
     } catch (error) {
       console.error("Error deleting calendar:", error);
     }
@@ -186,84 +188,83 @@ export default function Board({ params, recipes }) {
 
   return (
     <div className="m-auto min-h-screen w-full items-c px-[40px]">
-              <ToastContainer
-            position="top-right"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="light"
-        />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
       <DndContext
         onDragOver={onDragOver}
         sensors={sensors}
         onDragStart={onDragStart}
         onDragEnd={onDragEnd}
       >
-          {isSaved ? (
-                <div className="display-block flex justify-center items-center">
-                                                  <button
-                        onClick={() => {
-                            createNewColumn();
-                        }}
-                        className="h-[30px] my-10 flex mx-5 justify-center items-center text-white w-[200px] min-w-[200px] cursor-pointer rounded-lg bg-[#1d2a2d] shadow-lg  p-4 hover:bg-[#1d2a2dca]"
-                    >
-                        <CiCirclePlus className="mr-2 text-2xl" />
-                        Add Day
-                    </button>
-                    <button
-                        onClick={updateCalendar}
-                        className="h-[30px] my-10 flex mx-5 justify-center items-center text-white w-[200px] min-w-[200px] cursor-pointer rounded-lg bg-[#1d2a2d] shadow-lg  p-4 hover:bg-[#1d2a2dca]"
-                    >
-                        Edit Calendar
-                    </button>
-                    <button
-                        onClick={deleteCalendar}
-                        className="bg-[#610000] h-[30px] my-10 flex mx-5 justify-center items-center text-white w-[200px] min-w-[200px] cursor-pointer rounded-lg shadow-lg  p-4 hover:bg-[#610000b5]"
-                    >
-                        Delete Calendar
-                    </button>
-                </div>
-            ) : (
-                <div className="display-block flex justify-center items-center">
-                    <button
-                        onClick={() => {
-                            createNewColumn();
-                        }}
-                        className="h-[30px] my-10 flex mx-5 justify-center items-center text-white w-[200px] min-w-[200px] cursor-pointer rounded-lg bg-[#1d2a2d] shadow-lg  p-4 hover:bg-[#1d2a2dca]"
-                    >
-                        <CiCirclePlus className="mr-2 text-2xl" />
-                        Add Day
-                    </button>
-                    <button
-                        onClick={saveCalendar}
-                        className="h-[30px] my-10 mx-5 flex justify-center items-center text-white w-[200px] min-w-[200px] cursor-pointer rounded-lg bg-[#ee8434]  shadow-lg p-4 hover:bg-[#ee8434b8] "
-                    >
-                        Save Calendar
-                    </button>
-                </div>
-            )}
+        {isSaved ? (
+          <div className="display-block flex justify-center items-center">
+            <button
+              onClick={() => {
+                createNewColumn();
+              }}
+              className="h-[30px] my-10 flex mx-5 justify-center items-center text-white w-[200px] min-w-[200px] cursor-pointer rounded-lg bg-[#EE8434] shadow-lg  p-4 hover:bg-[#f39044]"
+            >
+              <CiCirclePlus className="mr-2 text-2xl" />
+              Add Day
+            </button>
+            <button
+              onClick={updateCalendar}
+              className="h-[30px] my-10 flex mx-5 justify-center items-center text-white w-[200px] min-w-[200px] cursor-pointer rounded-lg bg-[#1d2a2d] shadow-lg  p-4 hover:bg-[#1d2a2dca]"
+            >
+              Edit Calendar
+            </button>
+            <button
+              onClick={deleteCalendar}
+              className="bg-[#610000] h-[30px] my-10 flex mx-5 justify-center items-center text-white w-[200px] min-w-[200px] cursor-pointer rounded-lg shadow-lg  p-4 hover:bg-[#610000b5]"
+            >
+              Delete Calendar
+            </button>
+          </div>
+        ) : (
+          <div className="display-block flex justify-center items-center">
+            <button
+              onClick={() => {
+                createNewColumn();
+              }}
+              className="h-[30px] my-10 flex mx-5 justify-center items-center text-white w-[200px] min-w-[200px] cursor-pointer rounded-lg bg-[#1d2a2d] shadow-lg  p-4 hover:bg-[#1d2a2dca]"
+            >
+              <CiCirclePlus className="mr-2 text-2xl" />
+              Add Day
+            </button>
+            <button
+              onClick={saveCalendar}
+              className="h-[30px] my-10 mx-5 flex justify-center items-center text-white w-[200px] min-w-[200px] cursor-pointer rounded-lg bg-[#ee8434]  shadow-lg p-4 hover:bg-[#ee8434b8] "
+            >
+              Save Calendar
+            </button>
+          </div>
+        )}
 
         <div className="m-auto flex gap-4">
           <div className="m-auto flex gap-4 flex-wrap justify-center items-center">
             <SortableContext items={columnsId}>
               {columns.map((col) => (
                 <ColumnContainer
-  key={col.id}
-  column={col}
-  deleteColumn={deleteColumn}
-  updateColumn={updateColumn}
-  createTask={createTask}
-  tasks={tasks.filter((task) => task.columnId === col.id)}
-  deleteTask={deleteTask}
-  updateTask={updateTask}
-  recipes={recipes}
-/>
-
+                  key={col.id}
+                  column={col}
+                  deleteColumn={deleteColumn}
+                  updateColumn={updateColumn}
+                  createTask={createTask}
+                  tasks={tasks.filter((task) => task.columnId === col.id)}
+                  deleteTask={deleteTask}
+                  updateTask={updateTask}
+                  recipes={recipes}
+                />
               ))}
             </SortableContext>
             <SortableContext items={columnsId}>
