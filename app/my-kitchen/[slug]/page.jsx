@@ -9,7 +9,6 @@ import mykitchen from "@/utils/images/mykitchen.png";
 import { MdDelete } from "react-icons/md";
 import { CiEdit } from "react-icons/ci";
 
-
 // Asynchronous function to get user data
 const getData = async (slug) => {
   if (typeof window !== "undefined") {
@@ -55,6 +54,7 @@ export default function MyKitchen({ params, searchParams }) {
   const [user, setUser] = useState(null);
   const [meal, setMeal] = useState([]);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -98,7 +98,7 @@ export default function MyKitchen({ params, searchParams }) {
       // Remove the deleted meal from the state to update the UI
       const updatedMeals = meal.filter((m) => m.id !== mealId);
       setMeal(updatedMeals);
-
+      router.push(`/`);
       console.log("Meal deleted successfully");
     } catch (error) {
       console.error("Error deleting meal:", error);
@@ -151,7 +151,7 @@ export default function MyKitchen({ params, searchParams }) {
           <div className="relative">
             <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
               <svg
-                className="w-4 h-4 text-gray-500 "
+                className="w-5 h-5 text-[#D34C26]  font-bold"
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -166,51 +166,55 @@ export default function MyKitchen({ params, searchParams }) {
                 />
               </svg>
             </div>
-            <input
-              type="search"
-              id="default-search"
-              className="block focus:outline-none w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-[#610000] focus:border-[#610000]"
-              placeholder="Search your recipes.."
-              required
-            />
-            <button
-              type="submit"
-              className="text-white absolute end-2.5 bottom-2.5 bg-[#D34C26] hover:bg-[#e7532a] focus:ring-4 focus:outline-none focus:ring-[#610000] font-medium rounded-lg text-sm px-4 py-2 "
-            >
-              Search
-            </button>
+            <div>
+              <input
+                type="search"
+                id="default-search"
+                className="block focus:outline-none w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-[#610000] focus:border-[#610000]"
+                placeholder="Search your recipes.."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                required
+              />
+            </div>
           </div>
         </form>
       </div>
       <div className="flex justify-center items-center gap-5 flex-wrap my-20">
-        {meal.map((meal) => (
-        <Link className="cursor-pointer" key={meal.id} href={`/my-kitchen/${slug}/recipe-details/${meal.id}`}>
-          <div>
-            <div className="flex flex-col justify-between items-center bg-[#1D2A2D] border-[1px] border-[#3C4F76] w-[200px] h-[140px] py-2 rounded-[16px]">
-              <div className="flex justify-center items-center">
-                <h3 className="text-white w-[70%] text-center font-bold">
-                  {meal.name}
-                </h3>
-              </div>
-              <p className="text-xs text-[#EDE9D0]">
-               Click for details.
-              </p>
-              <div className="flex justify-center text-xs gap-4 text-center items-center ">
-                <Link href={`/edit-recipe/${meal.id}`}>
-                  <div className="bg-[#D34C26] text-white p-1 w-14 rounded-lg cursor-pointer">
-                    Edit
+        {meal
+          .filter((m) =>
+            m.name.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+          .map((filteredMeal) => (
+            <div key={filteredMeal.id}>
+              <div className="flex flex-col justify-between items-center bg-[#1D2A2D] border-[1px] border-[#3C4F76] w-[200px] h-[100px] py-2 rounded-[16px]">
+                <div className="flex flex-col h-[100%] justify-between items-center">
+                  <div className="flex justify-center items-center">
+                    <h3 className="text-white w-[70%] text-center font-bold">
+                      {filteredMeal.name}
+                    </h3>
                   </div>
-                </Link>
-                <div
-                  className="bg-red-700 text-white p-1 w-14 rounded-lg cursor-pointer"
-                  onClick={() => deleteMeal(meal.id)}
-                >
-                  Delete
+                </div>
+                <div>
+                  <div className="flex justify-center text-xs gap-4 text-center items-center ">
+                    <Link
+                      href={`/my-kitchen/${slug}/recipe-details/${meal.id}`}
+                    >
+                      <button className="bg-[#D34C26] text-white p-1 w-14 rounded-lg cursor-pointer">
+                        Details
+                      </button>
+                    </Link>
+                    <button
+                      className="bg-red-700 text-white p-1 w-14 rounded-lg cursor-pointer"
+                      onClick={() => deleteMeal(meal.id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
-          </div></Link>
-        ))}
+          ))}
       </div>
     </div>
   );

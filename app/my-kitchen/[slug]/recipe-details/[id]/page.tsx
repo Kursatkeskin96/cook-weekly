@@ -127,10 +127,8 @@ export default function MyKitchen({ params, searchParams }) {
             </span>
           </p>
           <div className="flex justify-center mt-5 text-sm gap-4 text-center items-center ">
-            <Link className="bg-[#D34C26] text-white p-1 w-20 rounded-lg cursor-pointer" href={`/edit-recipe/${meal.id}`}>
-  
-                Edit
-        
+            <Link href={`/edit-recipe/${meal.id}`}>
+              <button  className="bg-[#D34C26] text-white p-1 w-20 rounded-lg cursor-pointer">Edit</button>
             </Link>
             <button
               className="bg-red-700 text-white p-1 w-20 rounded-lg cursor-pointer"
