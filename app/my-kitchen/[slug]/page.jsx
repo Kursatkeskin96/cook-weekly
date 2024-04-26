@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useSession, status } from "next-auth/react";
+import { useSession} from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,8 +8,7 @@ import mykitchen from "@/utils/images/mykitchen.png";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import 'react-toastify/dist/ReactToastify.min.css';
-import { MdDelete } from "react-icons/md";
-import { CiEdit } from "react-icons/ci";
+
 
 // Asynchronous function to get user data
 const getData = async (slug) => {
@@ -122,7 +121,7 @@ export default function MyKitchen({ params, searchParams }) {
         </div>
         <hr className="w-[80%] h-[1px] mx-auto my-4 bg-[#FFC107] border-0 rounded"></hr>
       </div>
-      <div className="flex justify-between items-center mx-14 flex-wrap">
+      <div className="flex justify-between items-center flex-wrap">
         <div className=" w-60 h-60 mt-10 mb-10 lg:mb-0 mx-auto rounded-[50%] bg-[#EDE9D0] flex justify-center items-center">
           <Image src={mykitchen} width={200} height={200} alt="pic" />
         </div>
@@ -142,6 +141,11 @@ export default function MyKitchen({ params, searchParams }) {
         </div>
       </div>
       <hr className="w-[100%] mt-20 h-[1px] mx-auto my-4 bg-[#610000] border-0 rounded"></hr>
+
+      <div className="flex flex-col justify-center items-center">
+        <h3 className="text-2xl mt-4 font-bold text-[#FFC107]">Your Meals</h3>
+        <p className="my-1">You can click on them to view details, edit, or delete them.</p>
+      </div>
 
       <div>
         <form className="max-w-md mx-auto mt-16">
@@ -189,35 +193,25 @@ export default function MyKitchen({ params, searchParams }) {
       m.name.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .map((filteredMeal) => (
-      <div key={filteredMeal.id}>
-        <div className="flex flex-col justify-between items-center bg-[#1D2A2D] border-[1px] border-[#3C4F76] w-[200px] h-[100px] py-2 rounded-[16px]">
-          <div className="flex flex-col h-[100%] justify-between items-center">
+      <Link href={`/my-kitchen/${slug}/recipe-details/${filteredMeal.id}`}>
+    <div key={filteredMeal.id}>
+        <div className="flex flex-col justify-between items-center bg-[#1D2A2D] hover:bg-[#263a3e] border-[1px] border-[#3C4F76] w-[200px] h-[100px] py-2 rounded-[16px]">
+          <div className="flex flex-col h-[100%] justify-center items-center">
             <div className="flex justify-center items-center">
-              <h3 className="text-white w-[70%] text-center font-bold">
+              <h3 className="text-white text-sm text-center font-bold">
                 {filteredMeal.name}
               </h3>
             </div>
           </div>
           <div>
-            <div className="flex justify-center text-xs gap-4 text-center items-center ">
-              <Link href={`/my-kitchen/${slug}/recipe-details/${filteredMeal.id}`}>
-                <button className="bg-[#D34C26] text-white p-1 w-14 rounded-lg cursor-pointer">
-                  Details
-                </button>
-              </Link>
-              <button
-                className="bg-red-700 text-white p-1 w-14 rounded-lg cursor-pointer"
-                onClick={() => deleteMeal(filteredMeal.id)}
-              >
-                Delete
-              </button>
-            </div>
           </div>
         </div>
       </div>
+      </Link>
     ))}
-</div>
 
+</div>
+ 
     </div>
   );
 }

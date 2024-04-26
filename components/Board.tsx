@@ -41,6 +41,27 @@ const getCalendarData = async (slug: any) => {
   return res.json();
 };
 
+const getMealsData = async (slug) => {
+  let domain;
+  let protocol = "http://"; // Default protocol for local development
+
+  if (typeof window !== "undefined") {
+    const currentURL = window.location.href;
+    const urlParts = currentURL.split("/");
+    domain = urlParts[2]; // Gets the domain part of the URL
+    protocol = urlParts[0]; // Gets the protocol (http: or https:)
+  } else {
+    domain = "defaultDomainHere";
+  }
+  const api = `${protocol}//${domain}`;
+  const res = await fetch(`${api}/api/recipe/by-username/${slug}`);
+  if (!res.ok) {
+    throw new Error("Failed to fetch recipe data");
+  }
+
+  return res.json();
+};
+
 export default function Board({ params, recipes }) {
   const { slug } = params;
   const router = useRouter();
@@ -62,6 +83,34 @@ export default function Board({ params, recipes }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isSaved, setIsSaved] = useState(false);
+  const [matchedMeals, setMatchedMeals] = useState<Task[]>([]);
+  const [meal, setMeal] = useState([]);
+
+  const taskMealNames = tasks.map((task) => task.content); // Extract meal names from task content
+
+  useEffect(() => {
+    // Fetch user data and referredBy count
+    getMealsData(slug)
+      .then((info) => {
+        setMeal(info.meal);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error.message);
+        setLoading(false);
+        console.error("Error fetching user data:", error);
+      });
+  }, [slug]);
+
+  useEffect(() => {
+    if (meal.length > 0 && tasks.length > 0) {
+      const filteredMeals = meal.filter((m) =>
+        tasks.some((t) => t.content === m.name)
+      );
+      setMatchedMeals(filteredMeals);
+    }
+  }, [meal, tasks]); // React to changes in either meals or tasks
+
   useEffect(() => {
     getCalendarData(slug)
       .then((data) => {
@@ -207,25 +256,25 @@ export default function Board({ params, recipes }) {
         onDragEnd={onDragEnd}
       >
         {isSaved ? (
-          <div className="display-block flex justify-center items-center">
+          <div className="display-block flex flex-wrap justify-center items-center">
             <button
               onClick={() => {
                 createNewColumn();
               }}
-              className="h-[30px] my-10 flex mx-5 justify-center items-center text-white w-[200px] min-w-[200px] cursor-pointer rounded-lg bg-[#EE8434] shadow-lg  p-4 hover:bg-[#f39044]"
+              className="h-[30px] lg:my-10 flex my-3 mx-5 justify-center items-center text-white w-[200px] min-w-[200px] cursor-pointer rounded-lg bg-[#EE8434] shadow-lg  p-4 hover:bg-[#f39044]"
             >
               <CiCirclePlus className="mr-2 text-2xl" />
               Add Day
             </button>
             <button
               onClick={updateCalendar}
-              className="h-[30px] my-10 flex mx-5 justify-center items-center text-white w-[200px] min-w-[200px] cursor-pointer rounded-lg bg-[#1d2a2d] shadow-lg  p-4 hover:bg-[#1d2a2dca]"
+              className="h-[30px] lg:my-10 my-3 flex mx-5 justify-center items-center text-white w-[200px] min-w-[200px] cursor-pointer rounded-lg bg-[#1d2a2d] shadow-lg  p-4 hover:bg-[#1d2a2dca]"
             >
               Edit Calendar
             </button>
             <button
               onClick={deleteCalendar}
-              className="bg-[#610000] h-[30px] my-10 flex mx-5 justify-center items-center text-white w-[200px] min-w-[200px] cursor-pointer rounded-lg shadow-lg  p-4 hover:bg-[#610000b5]"
+              className="bg-[#610000] h-[30px] my-3 lg:my-10 flex mx-5 justify-center items-center text-white w-[200px] min-w-[200px] cursor-pointer rounded-lg shadow-lg  p-4 hover:bg-[#610000b5]"
             >
               Delete Calendar
             </button>
@@ -236,14 +285,14 @@ export default function Board({ params, recipes }) {
               onClick={() => {
                 createNewColumn();
               }}
-              className="h-[30px] my-10 flex mx-5 justify-center items-center text-white w-[200px] min-w-[200px] cursor-pointer rounded-lg bg-[#1d2a2d] shadow-lg  p-4 hover:bg-[#1d2a2dca]"
+              className="h-[30px] lg:my-10 my-3 flex mx-5 justify-center items-center text-white w-[200px] min-w-[200px] cursor-pointer rounded-lg bg-[#1d2a2d] shadow-lg  p-4 hover:bg-[#1d2a2dca]"
             >
               <CiCirclePlus className="mr-2 text-2xl" />
               Add Day
             </button>
             <button
               onClick={saveCalendar}
-              className="h-[30px] my-10 mx-5 flex justify-center items-center text-white w-[200px] min-w-[200px] cursor-pointer rounded-lg bg-[#ee8434]  shadow-lg p-4 hover:bg-[#ee8434b8] "
+              className="h-[30px] lg:my-10 mx-5 my-3 flex justify-center items-center text-white w-[200px] min-w-[200px] cursor-pointer rounded-lg bg-[#ee8434]  shadow-lg p-4 hover:bg-[#ee8434b8] "
             >
               Save Calendar
             </button>
@@ -251,7 +300,7 @@ export default function Board({ params, recipes }) {
         )}
 
         <div className="m-auto flex gap-4">
-          <div className="m-auto flex gap-4 flex-wrap justify-center items-center">
+          <div className="m-auto flex gap-4 flex-wrap lg:justify-start justify-start ml-2 items-center">
             <SortableContext items={columnsId}>
               {columns.map((col) => (
                 <ColumnContainer
@@ -322,6 +371,7 @@ export default function Board({ params, recipes }) {
             document.body
           )}
       </DndContext>
+  
     </div>
   );
 
