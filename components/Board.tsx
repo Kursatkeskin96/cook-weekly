@@ -63,6 +63,7 @@ const getMealsData = async (slug) => {
 };
 
 export default function Board({ params, recipes }) {
+  
   const { slug } = params;
   const router = useRouter();
   const { data: session } = useSession();
@@ -83,10 +84,8 @@ export default function Board({ params, recipes }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isSaved, setIsSaved] = useState(false);
-  const [matchedMeals, setMatchedMeals] = useState<Task[]>([]);
   const [meal, setMeal] = useState([]);
 
-  const taskMealNames = tasks.map((task) => task.content); // Extract meal names from task content
 
   useEffect(() => {
     // Fetch user data and referredBy count
@@ -102,14 +101,7 @@ export default function Board({ params, recipes }) {
       });
   }, [slug]);
 
-  useEffect(() => {
-    if (meal.length > 0 && tasks.length > 0) {
-      const filteredMeals = meal.filter((m) =>
-        tasks.some((t) => t.content === m.name)
-      );
-      setMatchedMeals(filteredMeals);
-    }
-  }, [meal, tasks]); // React to changes in either meals or tasks
+
 
   useEffect(() => {
     getCalendarData(slug)
