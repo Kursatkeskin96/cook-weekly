@@ -56,18 +56,15 @@ export default function MyKitchen({ params, searchParams }) {
   const [meal, setMeal] = useState([]);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Fetch user data and referredBy count
     getData(slug)
       .then((data) => {
         setUser(data.username);
-        setLoading(false);
       })
       .catch((error) => {
         setError(error.message);
-        setLoading(false);
         console.error("Error fetching user data:", error);
       });
   }, [slug]);
@@ -77,11 +74,9 @@ export default function MyKitchen({ params, searchParams }) {
     getMealData(slug)
       .then((info) => {
         setMeal(info.meal);
-        setLoading(false);
       })
       .catch((error) => {
         setError(error.message);
-        setLoading(false);
         console.error("Error fetching user data:", error);
       });
   }, [slug]);
@@ -106,9 +101,6 @@ export default function MyKitchen({ params, searchParams }) {
     }
   };
 
-  if (loading) {
-    return <div>Loading</div>;
-  }
   const username = session?.user?.username;
 
   return (
@@ -126,7 +118,7 @@ export default function MyKitchen({ params, searchParams }) {
           <Image src={mykitchen} width={200} height={200} alt="pic" />
         </div>
         <div className="lg:max-w-[55%] text-center">
-          <h2 className="text-2xl font-bold">Welcome Chef!</h2>
+          <h2 className="text-2xl font-bold text-[#f4cd57]">Welcome Chef!</h2>
           <p className="text-lg text-[#4f4d4d] my-5">
             In your Kitchen, you can review your recipes and edit if you want or
             even delete them. And you can also add your one of delicious
@@ -140,10 +132,10 @@ export default function MyKitchen({ params, searchParams }) {
           </Link>
         </div>
       </div>
-      <hr className="w-[100%] mt-20 h-[1px] mx-auto my-4 bg-[#610000] border-0 rounded"></hr>
+      <hr className="w-[100%] mt-20 h-[1px] mx-auto my-4 bg-[#FFC107] border-0 rounded"></hr>
 
       <div className="flex flex-col justify-center items-center">
-        <h3 className="text-2xl mt-4 font-bold text-[#FFC107]">Your Meals</h3>
+        <h3 className="text-2xl mt-4 font-bold text-[#610000]">Your Meals</h3>
         <p className="my-1">You can click on them to view details, edit, or delete them.</p>
       </div>
 

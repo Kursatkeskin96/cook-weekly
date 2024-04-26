@@ -44,7 +44,6 @@ export default function EditRecipe({params}) {
   const [currentStep, setCurrentStep] = useState(0);
   const [recipe, setRecipe] = useState([]);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [mealName, setMealName] = useState(""); // State for meal name
   const [ingredients, setIngredients] = useState([
     { id: Date.now(), name: "", unit: "", amount: "" },
@@ -54,11 +53,9 @@ export default function EditRecipe({params}) {
       .then(data => {
         setMealName(data.meal.name);
         setIngredients(data.meal.ingredients.length > 0 ? data.meal.ingredients : [{ id: Date.now(), name: "", unit: "", amount: "" }]);
-        setLoading(false);
       })
       .catch(error => {
         setError(error.message);
-        setLoading(false);
         console.error("Error fetching meal data:", error);
       });
   }, [id]);

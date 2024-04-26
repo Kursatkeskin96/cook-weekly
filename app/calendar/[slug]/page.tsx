@@ -37,24 +37,19 @@ export default function MyKitchen({ params, searchParams }) {
   const router = useRouter();
   const [recipe, setRecipe] = useState([]);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Fetch user data and referredBy count
     getData(slug)
       .then((data) => {
         setRecipe(data.meal);
-        setLoading(false);
       })
       .catch((error) => {
         setError(error.message);
-        setLoading(false);
         console.error("Error fetching user data:", error);
       });
   }, [slug]);
-  if (loading) {
-    return <div>Loading</div>;
-  }
+
   return (
     <div className="lg:max-w-[90%] max-w-[90%]  mx-auto">
       <motion.div

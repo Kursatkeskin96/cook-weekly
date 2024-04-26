@@ -54,17 +54,14 @@ export default function MyKitchen({ params, searchParams }) {
   const router = useRouter();
   const [meal, setMeal] = useState<Meal | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getMealData(id)
       .then((info) => {
         setMeal(info.meal);
-        setLoading(false);
       })
       .catch((error) => {
         setError(error.message);
-        setLoading(false);
         console.error("Error fetching user data:", error);
       });
   }, [id]);
@@ -90,15 +87,7 @@ export default function MyKitchen({ params, searchParams }) {
       console.error("Error deleting meal:", error);
     }
   };
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!meal) {
-    return <div>No meal data available</div>;
-  }
-
+if(!meal) return null
   return (
     <div className="lg:max-w-[80%] max-w-[90%] mx-auto">
          <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" />

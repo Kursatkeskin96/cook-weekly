@@ -81,7 +81,6 @@ export default function Board({ params, recipes }) {
   const [portalReady, setPortalReady] = useState(false);
 
   const [calendar, setCalendar] = useState<Calendar>([]);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [isSaved, setIsSaved] = useState(false);
   const [meal, setMeal] = useState([]);
@@ -92,11 +91,9 @@ export default function Board({ params, recipes }) {
     getMealsData(slug)
       .then((info) => {
         setMeal(info.meal);
-        setLoading(false);
       })
       .catch((error) => {
         setError(error.message);
-        setLoading(false);
         console.error("Error fetching user data:", error);
       });
   }, [slug]);
@@ -119,11 +116,9 @@ export default function Board({ params, recipes }) {
           console.log("No calendar data available");
           setIsSaved(false); // Set false if no data exists
         }
-        setLoading(false);
       })
       .catch((error) => {
         setError(error.message);
-        setLoading(false);
         setIsSaved(false); // Ensure it's false on error
         console.error("Error fetching calendar data:", error);
       });
