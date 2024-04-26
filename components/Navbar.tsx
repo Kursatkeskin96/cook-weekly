@@ -71,9 +71,9 @@ const Navbar = () => {
           <div className="flex flex-col text-2xl mt-10 jusitfy-center item-center text-center gap-8">
           {session?.user ? (
             <>  <Link onClick={() => setNav(false)} className="" href='/'>Home</Link>
-            <Link onClick={() => setNav(false)} href='/'>My Kitchen</Link>
-            <Link onClick={() => setNav(false)} href='/'>Calendar</Link>
-            <Link onClick={() => setNav(false)} className='bg-[#D34C26] text-white rounded-lg mx-auto w-32 text-center py-1 cursor-pointer' href='/'>Logout</Link></>
+            <Link onClick={() => setNav(false)} href={`/my-kitchen/${session.user.username}`}>My Kitchen</Link>
+            <Link onClick={() => setNav(false)} href={`/calendar/${session.user.username}`}>Calendar</Link>
+            <div onClick={() => { setNav(false); signOut(); }} className='bg-[#D34C26] text-white rounded-lg mx-auto w-32 text-center py-1 cursor-pointer'>Logout</div></>
               ) : (
              <>   <Link onClick={() => setNav(false)} className="w-20 mx-auto text-center py-1 relative after:bg-[#D34C26] after:absolute after:h-1 after:w-0 after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300 cursor-pointer" href='/'>Home</Link>
                          <Link onClick={() => setNav(false)} href='/login'>
