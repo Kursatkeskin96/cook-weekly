@@ -57,60 +57,64 @@ const RegisterForm = () => {
     <div className="bg-gray-100 min-h-screen flex justify-center items-start md:items-center lg:pt-0 md:pt-0 lg:items-center pt-20">
       <form
         onSubmit={handleSubmit}
-        className="bg-white fo9r h-fit lg:my-10 md:my-10 pb-5 w-[90%] md:w-[70%] lg:w-[400px] rounded-[16px]"
+               className="bg-white h-fit py-10 w-[90%] md:w-[70%] lg:w-[450px] rounded-[16px]"
       >
         <div className="flex-col">
           <Link href='/'>
-          <div className="flex justify-center items-center mt-5">
+          <div className="flex justify-center items-center">
             <Image src={logo} alt="logo" width={80} height={80} />
           </div>
           </Link>
           <h3 className="text-center font-bold text-xl mt-2">Welcome Chef</h3>
-          <p className="text-[#646464] text-center">
+          <p className="text-[#787878] text-center text-sm">
             Please enter your details to register
           </p>
           
-   <hr className="w-[90%] h-[1px] mx-auto my-4 bg-[#610000] border-0 rounded"></hr>
+          <div className="px-8">
 
-          <div className="flex flex-col px-5">
-            <label htmlFor="email" className="pl-3">E-mail</label>
+          <hr className="w-[100%] h-[1px] mx-auto my-6 bg-[#cecece] border-0 rounded"></hr>
+          </div>
+
+
+          <div className="flex flex-col px-8 my-4">
+          <label htmlFor="email" className="text-[#787878]">E-mail</label>
             <input
               id="email"
               type="text"
               value={email}
               placeholder="Type your e-mail.."
               onChange={(e) => setEmail(e.target.value)}
-              className="caret-[#818181] border border-[#818181]text-sm rounded-[16px] h-8 pl-3 focus:border-[#610000] focus:ring-0 focus:outline-none "
+                 className="caret-[#818181] border border-[#cecece] text-sm rounded-[8px] h-10 pl-3 focus:border-[#610000] focus:ring-0 focus:outline-none "
             />
           </div>
 
-          <div className="flex flex-col px-5 my-3">
-            <label htmlFor="username">Username</label>
+          <div className="flex flex-col px-8 my-3">
+            <label htmlFor="username"  className="text-[#787878]">Username</label>
             <input
               id="username"
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="caret-[#818181] border border-[#818181]text-sm rounded-[16px] h-8 pl-3 focus:border-[#610000] focus:ring-0 focus:outline-none"
+   className="caret-[#818181] border border-[#cecece] text-sm rounded-[8px] h-10 pl-3 focus:border-[#610000] focus:ring-0 focus:outline-none "
               required
               placeholder="Type your username.."
             />
           </div>
 
-          <div className="flex flex-col px-5">
-            <label htmlFor="password">Password</label>
+          <div className="flex flex-col px-8 pb-4">
+            <label htmlFor="password"  className="text-[#787878]">Password</label>
             <input
               id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="caret-[#818181] border border-[#818181]text-sm rounded-[16px] h-8 pl-3 focus:border-[#610000] focus:ring-0 focus:outline-none"
+                 className="caret-[#818181] border border-[#cecece] text-sm rounded-[8px] h-10 pl-3 focus:border-[#610000] focus:ring-0 focus:outline-none "
               required
               placeholder="********"
             />
           </div>
-          <div className="flex justify-center items-center mt-5"><button
-            className="hover:bg-[#be4422] w-60 text-center rounded-[16px] text-lg bg-[#D34C26] text-white h-[50px]"
+          <div className="flex justify-center items-center mt-5 px-8"><button
+             className="hover:bg-[#be4422] tracking-wide w-full text-center rounded-[8px] bg-[#D34C26] text-white h-10"
             type="submit"
             disabled={isLoading} // Disable button when loading
           >
